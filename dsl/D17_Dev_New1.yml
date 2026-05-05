@@ -10,6 +10,25 @@ kind: app
 version: 0.3.1
 workflow:
   conversation_variables:
+  - description: '50'
+    id: 3977aecb-d01e-425b-b122-0a7b4aef0ede
+    name: number_of_rows
+    selector:
+    - conversation
+    - number_of_rows
+    value: 0
+    value_type: integer
+  - description: ''
+    id: f4408ea6-d4d9-49f9-957e-de6a35ce7c7b
+    name: pms_colum_name
+    selector:
+    - conversation
+    - pms_colum_name
+    value: "  \"Company Category\",\n        \"Supplier / Business Partner Name\"\
+      ,\n        \"Buyer\",\n        \"Supplier / Business Partner Quote Amount (K$)\"\
+      ,\n        \"TBL Unit Price Level\",\n        \"Comments on TBL Negotiation\
+      \ Status\""
+    value_type: string
   - description: Sheet name for sheet verification
     id: 94784148-f34f-4e54-a7bd-9dd97451f582
     name: sheet_name
@@ -166,19 +185,6 @@ workflow:
       voice: ''
   graph:
     edges:
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: code
-        targetType: answer
-      id: 1776057413585-source-1776057896250-target
-      selected: false
-      source: '1776057413585'
-      sourceHandle: source
-      target: '1776057896250'
-      targetHandle: target
-      type: custom
-      zIndex: 0
     - data:
         isInLoop: false
         sourceType: start
@@ -396,12 +402,12 @@ workflow:
     - data:
         isInIteration: false
         isInLoop: false
-        sourceType: answer
-        targetType: code
-      id: 1776057896250-source-1777553831531-target
-      source: '1776057896250'
+        sourceType: code
+        targetType: assigner
+      id: 1777553831531-source-1777553925943-target
+      source: '1777553831531'
       sourceHandle: source
-      target: '1777553831531'
+      target: '1777553925943'
       targetHandle: target
       type: custom
       zIndex: 0
@@ -409,11 +415,22 @@ workflow:
         isInIteration: false
         isInLoop: false
         sourceType: code
-        targetType: assigner
-      id: 1777553831531-source-1777553925943-target
-      source: '1777553831531'
+        targetType: tool
+      id: 1776057413585-source-1777964487990-target
+      source: '1776057413585'
       sourceHandle: source
-      target: '1777553925943'
+      target: '1777964487990'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: answer
+      id: 1776057413585-source-1777965627576-target
+      source: '1776057413585'
+      sourceHandle: source
+      target: '1777965627576'
       targetHandle: target
       type: custom
       zIndex: 0
@@ -613,31 +630,33 @@ workflow:
       height: 161
       id: '1776057413585'
       position:
-        x: 1112.4161607609847
+        x: 1074.8936343483567
         y: 431.3745880206932
       positionAbsolute:
-        x: 1112.4161607609847
+        x: 1074.8936343483567
         y: 431.3745880206932
-      selected: true
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
       width: 244
     - data:
-        answer: '{{#1776057413585.result#}}'
+        answer: '{{#1777964487990.text#}}
+
+          {{#1777964487990.files#}}'
         desc: This node displays document received message the user based on language
           preference.
         selected: false
         title: Doc received output
         type: answer
         variables: []
-      height: 163
+      height: 164
       id: '1776057896250'
       position:
-        x: 1463.0841901063386
+        x: 1689.6996629053294
         y: 431.3745880206932
       positionAbsolute:
-        x: 1463.0841901063386
+        x: 1689.6996629053294
         y: 431.3745880206932
       selected: false
       sourcePosition: right
@@ -1274,10 +1293,10 @@ workflow:
       height: 97
       id: '1777553831531'
       position:
-        x: 1693.6996629053294
+        x: 1993.6996629053294
         y: 431.3745880206932
       positionAbsolute:
-        x: 1693.6996629053294
+        x: 1993.6996629053294
         y: 431.3745880206932
       selected: false
       sourcePosition: right
@@ -1304,16 +1323,263 @@ workflow:
       height: 145
       id: '1777553925943'
       position:
-        x: 1997.6996629053294
+        x: 2297.699662905329
         y: 431.3745880206932
       positionAbsolute:
-        x: 1997.6996629053294
+        x: 2297.699662905329
         y: 431.3745880206932
       sourcePosition: right
       targetPosition: left
       type: custom
       width: 244
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: xl_file
+            ja_JP: xl_file
+            pt_BR: xl_file
+            zh_Hans: xl_file
+          llm_description: ''
+          max: null
+          min: null
+          name: xl_file
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: files
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: sheet_name
+            ja_JP: sheet_name
+            pt_BR: sheet_name
+            zh_Hans: sheet_name
+          llm_description: ''
+          max: null
+          min: null
+          name: sheet_name
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: list_of_column
+            ja_JP: list_of_column
+            pt_BR: list_of_column
+            zh_Hans: list_of_column
+          llm_description: ''
+          max: null
+          min: null
+          name: list_of_column
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: number_of_rows
+            ja_JP: number_of_rows
+            pt_BR: number_of_rows
+            zh_Hans: number_of_rows
+          llm_description: ''
+          max: null
+          min: null
+          name: number_of_rows
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: lang
+            ja_JP: lang
+            pt_BR: lang
+            zh_Hans: lang
+          llm_description: ''
+          max: null
+          min: null
+          name: lang
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: max_file_size
+            ja_JP: max_file_size
+            pt_BR: max_file_size
+            zh_Hans: max_file_size
+          llm_description: ''
+          max: null
+          min: null
+          name: max_file_size
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: number
+        params:
+          lang: ''
+          list_of_column: ''
+          max_file_size: ''
+          number_of_rows: ''
+          sheet_name: ''
+          xl_file: ''
+        provider_id: 67779d92-961d-43b2-b1fb-f18bd2837994
+        provider_name: excel extractor V4 (WF)
+        provider_type: workflow
+        selected: false
+        title: excel extractor V4 (WF)
+        tool_configurations: {}
+        tool_description: extract required details from excel file.
+        tool_label: excel extractor V4 (WF)
+        tool_name: excel_extractor_v4
+        tool_node_version: '2'
+        tool_parameters:
+          lang:
+            type: mixed
+            value: '{{#conversation.preferred_lang#}}'
+          list_of_column:
+            type: mixed
+            value: '{{#conversation.pms_colum_name#}}'
+          max_file_size:
+            type: constant
+            value: 10
+          number_of_rows:
+            type: variable
+            value:
+            - conversation
+            - number_of_rows
+          sheet_name:
+            type: mixed
+            value: ' Negotiation Status Summary Tab'
+          xl_file:
+            type: variable
+            value:
+            - sys
+            - files
+        type: tool
+      height: 53
+      id: '1777964487990'
+      position:
+        x: 1389.6996629053294
+        y: 431.3745880206932
+      positionAbsolute:
+        x: 1389.6996629053294
+        y: 431.3745880206932
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1776057413585.result#}}'
+        desc: ''
+        selected: false
+        title: Answer 7
+        type: answer
+        variables: []
+      height: 103
+      id: '1777965627576'
+      position:
+        x: 1496.4057091376144
+        y: 691.7135744680961
+      positionAbsolute:
+        x: 1496.4057091376144
+        y: 691.7135744680961
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
     viewport:
-      x: -892.2968677933693
-      y: 20.220776700107706
-      zoom: 0.6783021637238353
+      x: -1643.5249782362632
+      y: 357.381280907069
+      zoom: 0.8185322195299652
