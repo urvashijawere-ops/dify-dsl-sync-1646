@@ -1,0 +1,1725 @@
+app:
+  description: 'Automatically extracts metadata from documents using Gemini AI and
+    updates the specified Knowledge Base document in Dify 1.7.2. Supports text paste
+    or KB Segments fetch (Option 1 — no file upload needed). File path now fetches
+    pre-indexed segments directly from the KB API, eliminating Document Extractor
+    timeouts on large files. After import: set DIFY_API_KEY in workflow Environment
+    Variables.'
+  icon: 🏷️
+  icon_background: '#E8F4F8'
+  mode: workflow
+  name: Auto KB Metadata Extractor_v4
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/gemini:0.7.4@5faf411e694e0da130a337347a625a3812b1b7502a0183382d66d92c841bf05a
+kind: app
+version: 0.3.1
+workflow:
+  conversation_variables: []
+  environment_variables:
+  - description: Dify API key for Knowledge Base operations. Set the value after importing
+      this workflow.
+    id: e3f7a9b1-2c4d-4e5f-8a6b-7c8d9e0f1a2b
+    name: DIFY_API_KEY
+    selector:
+    - env
+    - DIFY_API_KEY
+    value: ''
+    value_type: secret
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: variable-aggregator
+      id: edge-002
+      selected: false
+      source: '1744700000002'
+      sourceHandle: 'true'
+      target: '1744700000013'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: edge-003
+      selected: false
+      source: '1744700000002'
+      sourceHandle: 'false'
+      target: '1744700000005'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: code
+      id: edge-seg-001
+      selected: false
+      source: '1800000000001'
+      sourceHandle: source
+      target: '1800000000002'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: edge-seg-002
+      selected: false
+      source: '1800000000002'
+      sourceHandle: source
+      target: '1800000000003'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: edge-seg-003
+      selected: false
+      source: '1800000000003'
+      sourceHandle: source
+      target: '1744700000013'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: edge-006
+      selected: false
+      source: '1744700000005'
+      sourceHandle: source
+      target: '1744700000013'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: variable-aggregator
+        targetType: code
+      id: edge-007
+      selected: false
+      source: '1744700000013'
+      sourceHandle: source
+      target: '1744700000006'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: code
+      id: edge-009
+      selected: false
+      source: '1744700000007'
+      sourceHandle: source
+      target: '1744700000008'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: edge-010
+      selected: false
+      source: '1744700000008'
+      sourceHandle: source
+      target: '1744700000014'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: end
+      id: edge-011
+      selected: false
+      source: '1744700000014'
+      sourceHandle: 'false'
+      target: '1744700000015'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: http-request
+      id: edge-012
+      selected: false
+      source: '1744700000014'
+      sourceHandle: 'true'
+      target: '1744700000009'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: code
+      id: edge-013
+      selected: false
+      source: '1744700000009'
+      sourceHandle: source
+      target: '1744700000010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: edge-014
+      selected: false
+      source: '1744700000010'
+      sourceHandle: source
+      target: '1744700000016'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: end
+      id: edge-015
+      selected: false
+      source: '1744700000016'
+      sourceHandle: 'false'
+      target: '1744700000017'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: iteration
+      id: edge-017
+      selected: false
+      source: '1744700000020'
+      sourceHandle: source
+      target: '1744700000021'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        iteration_id: '1744700000021'
+        sourceType: iteration-start
+        targetType: http-request
+      id: edge-iter-001
+      selected: false
+      source: 1744700000021start
+      sourceHandle: source
+      target: '1744700000022'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        sourceType: iteration
+        targetType: code
+      id: edge-018
+      selected: false
+      source: '1744700000021'
+      sourceHandle: source
+      target: '1744700000023'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: http-request
+      id: edge-019
+      selected: false
+      source: '1744700000023'
+      sourceHandle: source
+      target: '1744700000024'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: end
+      id: edge-020
+      selected: false
+      source: '1744700000024'
+      sourceHandle: source
+      target: '1744700000012'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: http-request
+      id: 1744700000001-source-1776534341395-target
+      selected: false
+      source: '1744700000001'
+      sourceHandle: source
+      target: '1744700000007'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: http-request
+      id: 1776534341395-false-1744700000018-target
+      selected: false
+      source: '1776534341395'
+      sourceHandle: 'false'
+      target: '1800000000001'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: if-else
+      id: 1776534341395-true-1744700000013-target
+      selected: false
+      source: '1776534341395'
+      sourceHandle: 'true'
+      target: '1744700000002'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: if-else
+      id: 1744700000016-true-1744700000002-target
+      selected: false
+      source: '1744700000016'
+      sourceHandle: 'true'
+      target: '1776534341395'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: http-request
+        targetType: code
+      id: 1776537849391-source-1744700000020-target
+      selected: false
+      source: '1776537849391'
+      sourceHandle: source
+      target: '1744700000020'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 1744700000006-source-1776754105572-target
+      selected: false
+      source: '1744700000006'
+      sourceHandle: source
+      target: '1776754105572'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: http-request
+      id: 1776754105572-true-1776537849391-target
+      selected: false
+      source: '1776754105572'
+      sourceHandle: 'true'
+      target: '1776537849391'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: end
+      id: 1776754105572-false-1776754350599-target
+      selected: false
+      source: '1776754105572'
+      sourceHandle: 'false'
+      target: '1776754350599'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: Enter KB name, document name, then either paste text OR upload file
+          (not both required)
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - description: Exact name of the Knowledge Base in Dify
+          label: Knowledge Base Name
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: kb_name
+        - description: Exact name of the document inside the KB
+          label: Document Name
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: doc_name
+        - description: Paste document text here for direct extraction. Leave empty
+            to auto-fetch from KB segments.
+          label: Document Content (Text)
+          max_length: 50000
+          options: []
+          required: false
+          type: paragraph
+          variable: doc_content
+        - label: manual_metadata
+          max_length: 100
+          options: []
+          required: false
+          type: paragraph
+          variable: Manual_Metadata
+      height: 227
+      id: '1744700000001'
+      position:
+        x: -472.8462696615924
+        y: 255.51744368730823
+      positionAbsolute:
+        x: -472.8462696615924
+        y: 255.51744368730823
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: not empty
+            id: cond-manual-002
+            value: ''
+            variable_selector:
+            - '1744700000001'
+            - Manual_Metadata
+          id: 'true'
+          logical_operator: and
+        conditions:
+        - comparison_operator: not empty
+          id: cond-manual-002
+          value: ''
+          variable_selector:
+          - '1744700000001'
+          - Manual_Metadata
+        desc: 'TRUE: Manual_Metadata provided → pass directly to Merge. FALSE: doc_content
+          provided → Text LLM'
+        logical_operator: and
+        selected: false
+        title: Manual Metadata?
+        type: if-else
+      height: 185
+      id: '1744700000002'
+      position:
+        x: 564.3691448676873
+        y: 250
+      positionAbsolute:
+        x: 564.3691448676873
+        y: 250
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        authorization:
+          config:
+            api_key: '{{#env.DIFY_API_KEY#}}'
+            header: Authorization
+            type: bearer
+          type: api-key
+        body:
+          data: []
+          type: none
+        desc: Fetch pre-indexed document segments directly from Dify KB API — no file
+          parsing needed, eliminates Document Extractor timeout on large files
+        headers: ''
+        method: get
+        params: limit:200
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          connect: 30
+          max_connect_retries: 3
+          max_retries: 3
+          read: 120
+          write: 60
+        title: Get KB Segments
+        type: http-request
+        url: http://172.30.116.165/v1/datasets/{{#1744700000008.dataset_id#}}/documents/{{#1744700000010.doc_id#}}/segments
+        variables:
+        - value_selector:
+          - '1744700000008'
+          - dataset_id
+          variable: dataset_id
+        - value_selector:
+          - '1744700000010'
+          - doc_id
+          variable: doc_id
+      height: 283
+      id: '1800000000001'
+      position:
+        x: 784.9124055403881
+        y: -113.75669838873856
+      positionAbsolute:
+        x: 784.9124055403881
+        y: -113.75669838873856
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(segments_response: str) -> dict:\n    try:\n\
+          \        data = json.loads(segments_response)\n        segments = data.get('data',\
+          \ [])\n        if not segments:\n            return {'doc_text': 'ERROR:\
+          \ No segments found in KB response.', 'segment_count': '0'}\n        texts\
+          \ = []\n        for seg in segments:\n            content = seg.get('content',\
+          \ '').strip()\n            if content:\n                texts.append(content)\n\
+          \        combined = '\\n\\n'.join(texts)\n        if len(combined) > 200000:\n\
+          \            combined = combined[:200000]\n        return {\n          \
+          \  'doc_text': combined,\n            'segment_count': str(len(segments))\n\
+          \        }\n    except Exception as e:\n        return {'doc_text': 'ERROR:\
+          \ ' + str(e), 'segment_count': '0'}\n"
+        code_language: python3
+        desc: Parse Dify segments API response and concatenate segment text into a
+          single document string for the LLM. Caps at 40 000 chars to avoid LLM timeout.
+        outputs:
+          doc_text:
+            type: string
+          segment_count:
+            type: string
+        selected: false
+        title: Parse Segments to Text
+        type: code
+        variables:
+        - value_selector:
+          - '1800000000001'
+          - body
+          variable: segments_response
+      height: 129
+      id: '1800000000002'
+      position:
+        x: 1175.3584748264723
+        y: 18
+      positionAbsolute:
+        x: 1175.3584748264723
+        y: 18
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: Extract metadata from KB segments text using Gemini AI — same schema
+          as text path
+        model:
+          completion_params:
+            temperature: 0.1
+            top_p: 0.9
+          mode: chat
+          name: gemini-2.5-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: prompt-seg-sys
+          role: system
+          text: 'You are a high-precision Information Extraction Engine specialized
+            in RAG (Retrieval-Augmented Generation) metadata enrichment.
+
+
+            Your task is to extract structured, searchable metadata from the provided
+            document to improve downstream retrieval accuracy, ranking, and filtering.
+
+
+            STRICT RULES:
+
+            1. Output ONLY valid JSON. No explanations.
+
+            2. Do NOT hallucinate. Missing fields → null or [].
+
+            3. Follow schema EXACTLY. Do not add/remove fields.
+
+            4. Normalize entities using most complete/formal names.
+
+            5. Assign each entity to ONLY one category.
+
+            6. Use lowercase for topics, keywords.
+
+            7. Dates → ISO 8601 (YYYY-MM-DD or YYYY).
+
+            8. Remove duplicates across all arrays.
+
+            9. topics: 3-5 items max.
+
+            10. keywords: strictly 5-15 items.
+
+            11. intent must be one of:
+
+            ["informational","instructional","analytical","transactional","troubleshooting","reference"]
+
+            12. summary must be dense, semantic, optimized for embedding (no fluff).
+
+            13. title: infer from the document''s main subject if not explicitly stated.
+
+
+            -----------------------
+
+            SCHEMA:
+
+            {
+
+            "title": string | null,
+
+            "summary": string | null,
+
+            "document_type": string | null,
+
+            "domain": string | null,
+
+            "source_type": string | null,
+
+            "topics": string[],
+
+            "keywords": string[],
+
+            "entities": {
+
+            "persons": string[],
+
+            "organizations": string[],
+
+            "geopolitical": string[],
+
+            "technologies": string[],
+
+            "regulations": string[],
+
+            "events": string[],
+
+            "brands_products": string[]
+
+            },
+
+            "dates": {
+
+            "created_at": string | null,
+
+            "references": string[]
+
+            },
+
+            "language": string | null,
+
+            "intent": string | null,
+
+            "audience": string | null,
+
+            "sentiment": string | null,
+
+            "search_text": string | null,
+
+            "confidence": number | null
+
+            }'
+        - id: prompt-seg-usr
+          role: user
+          text: 'INPUT DOCUMENT (from KB segments):
+
+
+            {{#1800000000002.doc_text#}}
+
+            '
+        selected: false
+        title: LLM - Extract Metadata (Segments)
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: false
+      height: 149
+      id: '1800000000003'
+      position:
+        x: 1528
+        y: 100
+      positionAbsolute:
+        x: 1528
+        y: 100
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: Extract metadata from pasted text content using Gemini AI
+        model:
+          completion_params:
+            temperature: 0.1
+            top_p: 0.9
+          mode: chat
+          name: gemini-2.5-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: prompt-llm-text-sys
+          role: system
+          text: 'You are a high-precision Information Extraction Engine specialized
+            in RAG (Retrieval-Augmented Generation) metadata enrichment.
+
+
+            Your task is to extract structured, searchable metadata from the provided
+            document to improve downstream retrieval accuracy, ranking, and filtering.
+
+
+            STRICT RULES:
+
+            1. Output ONLY valid JSON. No explanations.
+
+            2. Do NOT hallucinate. Missing fields → null or [].
+
+            3. Follow schema EXACTLY. Do not add/remove fields.
+
+            4. Normalize entities using most complete/formal names.
+
+            5. Assign each entity to ONLY one category.
+
+            6. Use lowercase for topics, keywords.
+
+            7. Dates → ISO 8601 (YYYY-MM-DD or YYYY).
+
+            8. Remove duplicates across all arrays.
+
+            9. topics: 3–5 items max.
+
+            10. keywords: strictly 5–15 items.
+
+            11. intent must be one of:
+
+            ["informational","instructional","analytical","transactional","troubleshooting","reference"]
+
+            12. summary must be dense, semantic, optimized for embedding (no fluff).
+
+
+            -----------------------
+
+            SCHEMA:
+
+            {
+
+            "title": string | null,
+
+            "summary": string | null,
+
+            "document_type": string | null,
+
+            "domain": string | null,
+
+            "source_type": string | null,
+
+            "topics": string[],
+
+            "keywords": string[],
+
+            "entities": {
+
+            "persons": string[],
+
+            "organizations": string[],
+
+            "geopolitical": string[],
+
+            "technologies": string[],
+
+            "regulations": string[],
+
+            "events": string[],
+
+            "brands_products": string[]
+
+            },
+
+            "dates": {
+
+            "created_at": string | null,
+
+            "references": string[]
+
+            },
+
+            "language": string | null,
+
+            "intent": string | null,
+
+            "audience": string | null,
+
+            "sentiment": string | null,
+
+            "search_text": string | null,
+
+            "confidence": number | null
+
+            }'
+        - id: prompt-llm-text-usr
+          role: user
+          text: 'INPUT DOCUMENT:
+
+
+            {{#1744700000001.doc_content#}}
+
+            '
+        selected: false
+        title: Metadata Extractor (Text)
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+          enabled: false
+      height: 133
+      id: '1744700000005'
+      position:
+        x: 897.8426682304234
+        y: 448.2632383186319
+      positionAbsolute:
+        x: 897.8426682304234
+        y: 448.2632383186319
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        advanced_settings:
+          group_enabled: false
+          groups: []
+        desc: Merges output from whichever path executed (KB segments, text paste,
+          or manual)
+        output_type: string
+        selected: false
+        title: Merge LLM Output
+        type: variable-aggregator
+        variables:
+        - - '1800000000003'
+          - text
+        - - '1744700000005'
+          - text
+        - - '1744700000001'
+          - Manual_Metadata
+      height: 223
+      id: '1744700000013'
+      position:
+        x: 2390
+        y: 270
+      positionAbsolute:
+        x: 2390
+        y: 270
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import json\nimport re\n\n\ndef main(llm_output: str) -> dict:\n  \
+          \  if not llm_output or not llm_output.strip():\n        return {\n    \
+          \        'metadata_json': '{}',\n            'metadata_display': 'ERROR:\
+          \ No LLM output received.'\n        }\n\n    raw = llm_output.strip()\n\n\
+          \    try:\n        result = json.loads(raw)\n        return _format(result)\n\
+          \    except json.JSONDecodeError:\n        pass\n\n    cleaned = re.sub(r'```(?:json)?\\\
+          s*', '', raw).strip()\n    cleaned = re.sub(r'```\\s*$', '', cleaned).strip()\n\
+          \    try:\n        result = json.loads(cleaned)\n        return _format(result)\n\
+          \    except json.JSONDecodeError:\n        pass\n\n    match = re.search(r'\\\
+          {[\\s\\S]*\\}', cleaned)\n    if match:\n        try:\n            result\
+          \ = json.loads(match.group())\n            return _format(result)\n    \
+          \    except json.JSONDecodeError:\n            pass\n\n    return {\n  \
+          \      'metadata_json': '{}',\n        'metadata_display': 'ERROR: Could\
+          \ not parse metadata. Raw: ' + raw[:300]\n    }\n\n\ndef _format(result:\
+          \ dict) -> dict:\n    lines = []\n    for k, v in result.items():\n    \
+          \    if isinstance(v, list):\n            v = ', '.join(str(i) for i in\
+          \ v)\n        lines.append(f'**{k}**: {v}')\n    return {\n        'metadata_json':\
+          \ json.dumps(result, ensure_ascii=False),\n        'metadata_display': '\\\
+          n'.join(lines)\n    }\n"
+        code_language: python3
+        desc: Parse and clean JSON metadata output from LLM
+        outputs:
+          metadata_display:
+            type: string
+          metadata_json:
+            type: string
+        selected: false
+        title: Parse Metadata JSON
+        type: code
+        variables:
+        - value_selector:
+          - '1744700000013'
+          - output
+          variable: llm_output
+      height: 97
+      id: '1744700000006'
+      position:
+        x: 2680
+        y: 100
+      positionAbsolute:
+        x: 2680
+        y: 100
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is not
+            id: 869981d4-e508-40e0-8619-cb2fbecd7ad8
+            value: '{}'
+            varType: string
+            variable_selector:
+            - '1744700000006'
+            - metadata_json
+          id: 'true'
+          logical_operator: and
+        desc: Guard — ensure metadata JSON is not empty before proceeding
+        selected: false
+        title: Metadata Valid?
+        type: if-else
+      height: 169
+      id: '1776754105572'
+      position:
+        x: 2930
+        y: 255
+      positionAbsolute:
+        x: 2930
+        y: 255
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: Metadata JSON is empty — invalid or unparseable input
+        outputs:
+        - value_selector:
+          - '1744700000006'
+          - metadata_display
+          value_type: string
+          variable: bad_input
+        selected: false
+        title: Error - BAD DATA
+        type: end
+      height: 134
+      id: '1776754350599'
+      position:
+        x: 3277.8624405823743
+        y: 461.5255627903798
+      positionAbsolute:
+        x: 3277.8624405823743
+        y: 461.5255627903798
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        authorization:
+          config:
+            api_key: '{{#env.DIFY_API_KEY#}}'
+            header: Authorization
+            type: bearer
+          type: api-key
+        body:
+          data:
+          - type: text
+            value: ''
+          type: none
+        desc: Search Knowledge Base by name to retrieve dataset_id
+        headers: ''
+        method: get
+        params: limit:100
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          connect: 60
+          max_connect_retries: 3
+          max_retries: 3
+          read: 60
+          write: 60
+        title: Get Knowledge Base ID
+        type: http-request
+        url: http://172.30.116.165/v1/datasets
+        variables:
+        - value_selector:
+          - '1744700000001'
+          - kb_name
+          variable: kb_name
+      height: 183
+      id: '1744700000007'
+      position:
+        x: 3240
+        y: 75
+      positionAbsolute:
+        x: 3240
+        y: 75
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\n\ndef main(api_response: str, kb_name: str) -> dict:\n\
+          \    try:\n        data = json.loads(api_response)\n        if isinstance(data,\
+          \ list):\n            datasets = data\n        elif isinstance(data, dict)\
+          \ and 'data' in data:\n            datasets = data['data']\n        elif\
+          \ isinstance(data, dict) and 'id' in data:\n            datasets = [data]\n\
+          \        else:\n            datasets = []\n        for ds in datasets:\n\
+          \            if ds.get('name', '').lower() == kb_name.lower():\n       \
+          \         return {'dataset_id': ds['id'], 'status': 'found'}\n        for\
+          \ ds in datasets:\n            if kb_name.lower() in ds.get('name', '').lower():\n\
+          \                return {'dataset_id': ds['id'], 'status': 'partial_match'}\n\
+          \        return {'dataset_id': '', 'status': 'KB not found: ' + kb_name}\n\
+          \    except Exception as e:\n        return {'dataset_id': '', 'status':\
+          \ 'error: ' + str(e)}\n"
+        code_language: python3
+        desc: Extract dataset ID from Dify list datasets API response
+        outputs:
+          dataset_id:
+            type: string
+          status:
+            type: string
+        selected: false
+        title: Extract Dataset ID
+        type: code
+        variables:
+        - value_selector:
+          - '1744700000007'
+          - body
+          variable: api_response
+        - value_selector:
+          - '1744700000001'
+          - kb_name
+          variable: kb_name
+      height: 97
+      id: '1744700000008'
+      position:
+        x: 3530
+        y: 255
+      positionAbsolute:
+        x: 3530
+        y: 255
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: not empty
+            id: cond-dataset-001
+            value: ''
+            variable_selector:
+            - '1744700000008'
+            - dataset_id
+          id: 'true'
+          logical_operator: and
+        conditions:
+        - comparison_operator: not empty
+          id: cond-dataset-001
+          value: ''
+          variable_selector:
+          - '1744700000008'
+          - dataset_id
+        desc: Stop early if KB not found
+        logical_operator: and
+        selected: false
+        title: KB Found?
+        type: if-else
+      height: 153
+      id: '1744700000014'
+      position:
+        x: 3830
+        y: 244
+      positionAbsolute:
+        x: 3830
+        y: 244
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: Early exit — Knowledge Base not found
+        outputs:
+        - value_selector:
+          - '1744700000008'
+          - status
+          variable: error_message
+        selected: false
+        title: Error - KB Not Found
+        type: end
+      height: 118
+      id: '1744700000015'
+      position:
+        x: 4096
+        y: 561
+      positionAbsolute:
+        x: 4096
+        y: 561
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        authorization:
+          config:
+            api_key: '{{#env.DIFY_API_KEY#}}'
+            header: Authorization
+            type: bearer
+          type: api-key
+        body:
+          data:
+          - type: text
+            value: ''
+          type: none
+        desc: Search document by name within the Knowledge Base
+        headers: ''
+        method: get
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          connect: 60
+          max_connect_retries: 3
+          max_retries: 3
+          read: 60
+          write: 60
+        title: Get Document ID
+        type: http-request
+        url: http://172.30.116.165/v1/datasets/{{#1744700000008.dataset_id#}}/documents
+        variables:
+        - value_selector:
+          - '1744700000008'
+          - dataset_id
+          variable: dataset_id
+        - value_selector:
+          - '1744700000001'
+          - doc_name
+          variable: doc_name
+      height: 217
+      id: '1744700000009'
+      position:
+        x: 4113
+        y: 270
+      positionAbsolute:
+        x: 4113
+        y: 270
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\n\ndef main(api_response: str, doc_name: str) -> dict:\n\
+          \    try:\n        data = json.loads(api_response)\n        docs = data.get('data',\
+          \ [])\n        for doc in docs:\n            if doc.get('name', '').lower()\
+          \ == doc_name.lower():\n                return {'doc_id': doc['id'], 'status':\
+          \ 'found'}\n        for doc in docs:\n            if doc_name.lower() in\
+          \ doc.get('name', '').lower():\n                return {'doc_id': doc['id'],\
+          \ 'status': 'partial_match'}\n        return {'doc_id': '', 'status': 'Doc\
+          \ not found: ' + doc_name}\n    except Exception as e:\n        return {'doc_id':\
+          \ '', 'status': 'error: ' + str(e)}\n"
+        code_language: python3
+        desc: Extract document ID from Dify list documents API response
+        outputs:
+          doc_id:
+            type: string
+          status:
+            type: string
+        selected: false
+        title: Extract Document ID
+        type: code
+        variables:
+        - value_selector:
+          - '1744700000009'
+          - body
+          variable: api_response
+        - value_selector:
+          - '1744700000001'
+          - doc_name
+          variable: doc_name
+      height: 97
+      id: '1744700000010'
+      position:
+        x: 4423
+        y: 270
+      positionAbsolute:
+        x: 4423
+        y: 270
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: not empty
+            id: cond-doc-001
+            value: ''
+            variable_selector:
+            - '1744700000010'
+            - doc_id
+          id: 'true'
+          logical_operator: and
+        conditions:
+        - comparison_operator: not empty
+          id: cond-doc-001
+          value: ''
+          variable_selector:
+          - '1744700000010'
+          - doc_id
+        desc: Stop early if document not found
+        logical_operator: and
+        selected: false
+        title: Document Found?
+        type: if-else
+      height: 153
+      id: '1744700000016'
+      position:
+        x: 4733
+        y: 250
+      positionAbsolute:
+        x: 4733
+        y: 250
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: Early exit — Document not found in the Knowledge Base
+        outputs:
+        - value_selector:
+          - '1744700000010'
+          - status
+          variable: error_message
+        selected: false
+        title: Error - Document Not Found
+        type: end
+      height: 134
+      id: '1744700000017'
+      position:
+        x: 5138
+        y: 542
+      positionAbsolute:
+        x: 5138
+        y: 542
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        authorization:
+          config:
+            api_key: '{{#env.DIFY_API_KEY#}}'
+            type: bearer
+          type: api-key
+        body:
+          data: []
+          type: none
+        desc: ''
+        headers: ''
+        method: get
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: Get Existing Fields
+        type: http-request
+        url: http://172.30.116.165/v1/datasets/{{#1744700000008.dataset_id#}}/metadata
+        variables: []
+      height: 173
+      id: '1776537849391'
+      position:
+        x: 4969
+        y: 18
+      positionAbsolute:
+        x: 4969
+        y: 18
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(metadata_json: str, existing_fields_response:\
+          \ str) -> dict:\n    try:\n        metadata = json.loads(metadata_json)\n\
+          \        existing_response = json.loads(existing_fields_response)\n    \
+          \    existing_fields = existing_response.get('doc_metadata', [])\n     \
+          \   existing_map = {f['name']: f['id'] for f in existing_fields}\n\n   \
+          \     fields_to_create = []\n        existing_assignments = []\n\n     \
+          \   for field_name, field_value in metadata.items():\n            if isinstance(field_value,\
+          \ list):\n                field_value = ', '.join(str(i) for i in field_value)\n\
+          \            field_value = str(field_value)\n            if field_name in\
+          \ existing_map:\n                existing_assignments.append(json.dumps({\n\
+          \                    'id': existing_map[field_name],\n                 \
+          \   'name': field_name,\n                    'value': field_value\n    \
+          \            }))\n            else:\n                fields_to_create.append(field_name)\n\
+          \n        return {\n            'fields_to_create': fields_to_create,\n\
+          \            'existing_assignments': json.dumps(existing_assignments)\n\
+          \        }\n    except Exception as e:\n        return {'fields_to_create':\
+          \ [], 'existing_assignments': '[]'}"
+        code_language: python3
+        desc: Parse metadata JSON into array of field names for iteration
+        outputs:
+          existing_assignments:
+            children: null
+            type: string
+          fields_to_create:
+            children: null
+            type: array[string]
+        selected: false
+        title: Prepare Field Names
+        type: code
+        variables:
+        - value_selector:
+          - '1776537849391'
+          - body
+          value_type: string
+          variable: existing_fields_response
+        - value_selector:
+          - '1744700000006'
+          - metadata_json
+          value_type: string
+          variable: metadata_json
+      height: 97
+      id: '1744700000020'
+      position:
+        x: 5041
+        y: 264
+      positionAbsolute:
+        x: 5041
+        y: 264
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: Loop over each metadata field name and create it in the Knowledge Base
+        error_handle_mode: terminated
+        height: 305
+        is_parallel: false
+        iterator_selector:
+        - '1744700000020'
+        - fields_to_create
+        output_selector:
+        - '1744700000022'
+        - body
+        output_type: array[string]
+        parallel_nums: 10
+        selected: false
+        start_node_id: 1744700000021start
+        title: Create Metadata Fields
+        type: iteration
+        width: 720
+      height: 305
+      id: '1744700000021'
+      position:
+        x: 5377
+        y: 140
+      positionAbsolute:
+        x: 5377
+        y: 140
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 720
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 1744700000021start
+      parentId: '1744700000021'
+      position:
+        x: 24
+        y: 68
+      positionAbsolute:
+        x: 5401
+        y: 208
+      selectable: false
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        authorization:
+          config:
+            api_key: '{{#env.DIFY_API_KEY#}}'
+            header: Authorization
+            type: bearer
+          type: api-key
+        body:
+          data:
+          - id: key-value-748
+            key: ''
+            type: text
+            value: '{"type": "string", "name": {{#1744700000021.item#}}}'
+          type: json
+        desc: Create one metadata field in the Knowledge Base
+        headers: ''
+        isIterationStart: true
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          connect: 60
+          max_connect_retries: 3
+          max_retries: 3
+          read: 60
+          write: 60
+        title: Create Metadata Field
+        type: http-request
+        url: http://172.30.116.165/v1/datasets/{{#1744700000008.dataset_id#}}/metadata
+        variables:
+        - value_selector:
+          - '1744700000021'
+          - item
+          variable: field_name
+        - value_selector:
+          - '1744700000008'
+          - dataset_id
+          variable: dataset_id
+      height: 218
+      id: '1744700000022'
+      isInIteration: true
+      parentId: '1744700000021'
+      position:
+        x: 130
+        y: 68
+      positionAbsolute:
+        x: 5507
+        y: 208
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+      zIndex: 1002
+    - data:
+        code: "import json\n\ndef main(created_fields: list, existing_assignments:\
+          \ str, metadata_json: str, doc_id: str) -> dict:\n    try:\n        metadata\
+          \ = json.loads(metadata_json)\n        metadata_list = []\n\n        # existing\
+          \ fields — already have IDs\n        for assignment_raw in json.loads(existing_assignments):\n\
+          \            try:\n                a = json.loads(assignment_raw) if isinstance(assignment_raw,\
+          \ str) else assignment_raw\n                if a.get('id') and a.get('name'):\n\
+          \                    metadata_list.append({'id': a['id'], 'value': a['value'],\
+          \ 'name': a['name']})\n            except Exception:\n                continue\n\
+          \n        # newly created fields\n        for field_raw in created_fields:\n\
+          \            try:\n                field = json.loads(field_raw) if isinstance(field_raw,\
+          \ str) else field_raw\n                name = field.get('name', '')\n  \
+          \              fid = field.get('id', '')\n                val = metadata.get(name,\
+          \ '')\n                if isinstance(val, list):\n                    val\
+          \ = ', '.join(str(i) for i in val)\n                val = str(val)\n   \
+          \             if fid and name:\n                    metadata_list.append({'id':\
+          \ fid, 'value': val, 'name': name})\n            except Exception:\n   \
+          \             continue\n\n        operation_data = [{'document_id': doc_id,\
+          \ 'metadata_list': metadata_list}]\n        return {\n            'operation_data_json':\
+          \ json.dumps(operation_data),\n            'field_count': str(len(metadata_list))\n\
+          \        }\n    except Exception as e:\n        return {'operation_data_json':\
+          \ '[]', 'field_count': '0'}"
+        code_language: python3
+        desc: Match created field IDs with metadata values and build update payload
+        outputs:
+          field_count:
+            type: string
+          operation_data_json:
+            type: string
+        selected: false
+        title: Build Update Payload
+        type: code
+        variables:
+        - value_selector:
+          - '1744700000021'
+          - output
+          variable: created_fields
+        - value_selector:
+          - '1744700000006'
+          - metadata_json
+          variable: metadata_json
+        - value_selector:
+          - '1744700000010'
+          - doc_id
+          variable: doc_id
+        - value_selector:
+          - '1744700000020'
+          - existing_assignments
+          value_type: string
+          variable: existing_assignments
+      height: 97
+      id: '1744700000023'
+      position:
+        x: 6128
+        y: 270
+      positionAbsolute:
+        x: 6128
+        y: 270
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        authorization:
+          config:
+            api_key: '{{#env.DIFY_API_KEY#}}'
+            header: Authorization
+            type: bearer
+          type: api-key
+        body:
+          data:
+          - type: text
+            value: '{"operation_data": {{#1744700000023.operation_data_json#}}'
+          type: json
+        desc: Assign all extracted metadata values to the document in one API call
+        headers: ''
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          connect: 60
+          max_connect_retries: 3
+          max_retries: 3
+          read: 60
+          write: 60
+        title: Update Document Metadata
+        type: http-request
+        url: http://172.30.116.165/v1/datasets/{{#1744700000008.dataset_id#}}/documents/metadata
+        variables:
+        - value_selector:
+          - '1744700000008'
+          - dataset_id
+          variable: dataset_id
+        - value_selector:
+          - '1744700000023'
+          - operation_data_json
+          variable: operation_data_json
+      height: 217
+      id: '1744700000024'
+      position:
+        x: 6413
+        y: 270
+      positionAbsolute:
+        x: 6413
+        y: 270
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1744700000006'
+          - metadata_display
+          variable: extracted_metadata
+        - value_selector:
+          - '1744700000023'
+          - field_count
+          variable: fields_created
+        - value_selector:
+          - '1744700000024'
+          - body
+          variable: api_update_response
+        selected: false
+        title: End - Success
+        type: end
+      height: 142
+      id: '1744700000012'
+      position:
+        x: 6944
+        y: 318
+      positionAbsolute:
+        x: 6944
+        y: 318
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: not empty
+            id: af735ff8-d03d-412a-a866-ac7a7a6cb99c
+            value: ''
+            variable_selector:
+            - '1744700000001'
+            - Manual_Metadata
+          - comparison_operator: not empty
+            id: cond-text-002
+            value: ''
+            variable_selector:
+            - '1744700000001'
+            - doc_content
+          id: 'true'
+          logical_operator: or
+        desc: 'TRUE: manual metadata or doc_content provided → route to text/manual
+          path. FALSE: neither → fetch KB segments automatically'
+        selected: false
+        title: Has Manual or Text?
+        type: if-else
+      height: 227
+      id: '1776534341395'
+      position:
+        x: -91.27151946504694
+        y: 140.05736609728058
+      positionAbsolute:
+        x: -91.27151946504694
+        y: 140.05736609728058
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        author: ashish
+        desc: ''
+        height: 209
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"KB
+          name should match the existing KB","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"listitem","version":1,"value":1},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Doc
+          name shold match document name in the existing KB","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"listitem","version":1,"value":2}],"direction":"ltr","format":"","indent":0,"type":"list","version":1,"listType":"bullet","start":1,"tag":"ul"},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Execute
+          the flow by providing any of the input value from the 3 optional fields.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""},{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Doc
+          Content : The KB data in text for which metadata needs to be created.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"listitem","version":1,"value":1},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Doc
+          File : The suppoted KB document for which metadata needs to be created.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"listitem","version":1,"value":2},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Manual
+          Metadata : Pass valid json In the Manual Metadta field which contains valid
+          {key: value}","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"listitem","version":1,"value":3}],"direction":"ltr","format":"","indent":0,"type":"list","version":1,"listType":"bullet","start":1,"tag":"ul"}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 563
+      height: 209
+      id: '1776664527022'
+      position:
+        x: -587.1188500678336
+        y: 561.7199756783488
+      positionAbsolute:
+        x: -587.1188500678336
+        y: 561.7199756783488
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 563
+    viewport:
+      x: 372.49425496759716
+      y: 122.89792022259905
+      zoom: 0.4870020189147214
