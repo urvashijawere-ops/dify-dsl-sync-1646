@@ -1,0 +1,336 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: POC_FlowChart_Simplification
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/gemini:0.7.4@5faf411e694e0da130a337347a625a3812b1b7502a0183382d66d92c841bf05a
+kind: app
+version: 0.3.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 50
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: http-request
+      id: 1777546319595-source-1777621051812-target
+      source: '1777546319595'
+      sourceHandle: source
+      target: '1777621051812'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: http-request
+        targetType: llm
+      id: 1777621051812-source-llm-target
+      source: '1777621051812'
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: llm-source-1777877117408-target
+      source: llm
+      sourceHandle: source
+      target: '1777877117408'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1777877117408-source-answer-target
+      source: '1777877117408'
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - allowed_file_extensions:
+          - .yml
+          allowed_file_types:
+          - custom
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: Input_DSL
+          max_length: 48
+          options: []
+          required: true
+          type: file
+          variable: Input_DSL
+      height: 89
+      id: '1777546319595'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        memory:
+          query_prompt_template: ''
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-pro
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 3a1570aa-4229-4b94-adcd-29a3e449e773
+          role: system
+          text: "**Role: You are an expert Dify Workflow Architect and Systems Designer\
+            \ specializing in DSL (Domain Specific Language) parsing and ASCII visualization.\n\
+            **Task: Transform the provided Dify DSL file into a high-fidelity ASCII\
+            \ flowchart. Use only the nodes and edges defined in the provided DSL.\
+            \ Do not invent steps or skip nodes.\n**CRITICAL: Do not use internal\
+            \ knowledge to create a sample DSL. If the Input data variable is empty\
+            \ or contains non-DSL text, respond with \"Error: No DSL data provided.\"\
+            \ Do not generate a placeholder workflow.\nConstraints:\n**Source of Truth:\
+            \ Use only the nodes and edges (or connections) defined in the provided\
+            \ DSL. Do not invent steps, skip nodes, or assume external integrations\
+            \ not listed in the file.\n***Formatting: * Use a box structure with broken\
+            \ corners: text ┌───────────────┐ | ● Node Name | └───────────────┘\n\
+            Use | and v for vertical flow and --> for horizontal flow.\nIf a node\
+            \ has multiple outputs (branching logic), represent the split clearly.\n\
+            Icons: Use simple bullet symbols (●, ○) or emojis (✅, ❌) to represent\
+            \ node status or types as depicted in the reference logic.\nConnectors:\
+            \ Use | for vertical lines and the specific ▼ (down-pointing triangle)\
+            \ for arrowheads.\nBranching: For If/Else logic, use a horizontal split\
+            \ line ┌──────┴──────┐ followed by vertical paths.\n\n**Strict Accuracy:\
+            \ Ensure the flow strictly follows the source_node to target_node mapping\
+            \ found in the DSL's edge list.\n**No Dependencies: Do not use Mermaid.js,\
+            \ PlantUML, or any external rendering code. Use standard character symbols\
+            \ only.\n***Output: Provide a clean, \"beautified\" ASCII diagram followed\
+            \ by a brief legend if the node titles are truncated for space. \n\nYour\
+            \ Dify DSL file here : {{#1777621051812.body#}}"
+        - id: 9aeb7947-3deb-444a-8ccf-d10fe87741bb
+          role: user
+          text: 'Input data : {{#1777621051812.body#}}'
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: llm
+      position:
+        x: 733.7757443705087
+        y: 265.67598877337593
+      positionAbsolute:
+        x: 733.7757443705087
+        y: 265.67598877337593
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '***
+
+
+          {{#1777877117408.text#}}'
+        desc: ''
+        selected: false
+        title: Answer
+        type: answer
+        variables: []
+      height: 104
+      id: answer
+      position:
+        x: 1365.8378214409229
+        y: 253.44296693380664
+      positionAbsolute:
+        x: 1365.8378214409229
+        y: 253.44296693380664
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data: []
+          type: none
+        desc: ''
+        headers: ''
+        method: get
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: true
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: HTTP Request
+        type: http-request
+        url: '{{#1777546319595.Input_DSL.url#}}'
+        variables: []
+      height: 125
+      id: '1777621051812'
+      position:
+        x: 418.7902575198016
+        y: 271.3907427566704
+      positionAbsolute:
+        x: 418.7902575198016
+        y: 271.3907427566704
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-pro
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: af6011fb-e01b-4500-a2f3-380f7b4d5cd2
+          role: system
+          text: "**Role: You are a UX-focused Process Simplification Expert. Your\
+            \ specialty is translating technical workflows into simple, easy-to-understand\
+            \ visuals for non-technical audiences.**\n\n**Task:**\nConvert the provided\
+            \ ASCII flowchart into a simplified version that a non-technical person\
+            \ can easily understand.\n\n**Input:**\nA detailed ASCII flowchart containing\
+            \ system-level nodes, technical labels, and possibly complex branching.\n\
+            \n**Instructions:**\n- Preserve the overall logical flow, but simplify\
+            \ node names into plain English.\n- Remove technical jargon (e.g., \"\
+            HTTP Request\", \"LLM\", \"API Call\") and replace with user-friendly\
+            \ descriptions (e.g., \"Send request\", \"Process data\", \"Generate response\"\
+            ).\n- Combine steps where possible to reduce complexity.\n- Keep only\
+            \ essential decision points and major steps.\n- Limit the flow to high-level\
+            \ stages (ideally 5–8 steps total).\n- For decision nodes, use simple\
+            \ language like:\n  - \"Is input valid?\"\n  - \"Did it succeed?\"\n-\
+            \ Maintain a clean ASCII structure using boxes and arrows.\n\n**Formatting\
+            \ Rules:**\n- Use simple boxes:\n  ┌───────────────┐\n  | Step Name  \
+            \   |\n  └───────────────┘\n- Use:\n  - ↓ or ▼ for vertical flow\n  -\
+            \ --> for horizontal flow\n- Keep layout clean and readable (avoid dense\
+            \ branching where possible)\n\n**Tone:**\n- Clear, simple, and business-friendly\n\
+            - Avoid technical terminology\n- Think: explaining to a stakeholder or\
+            \ client\n\n**Output:**\n- A simplified ASCII flowchart\n- Optional: 1–2\
+            \ sentence summary explaining what the process does in plain English\n\
+            \n**CRITICAL:**\n- Do NOT invent new steps\n- Do NOT change the logic\n\
+            - Only simplify and summarize what already exists"
+        - id: d17a7798-7c42-4b4b-ad05-aaa79d45e25e
+          role: user
+          text: DSL data {{#llm.text#}}
+        selected: false
+        title: LLM 2
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: '1777877117408'
+      position:
+        x: 1065.8378214409229
+        y: 253.44296693380664
+      positionAbsolute:
+        x: 1065.8378214409229
+        y: 253.44296693380664
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 95.073108385213
+      y: -8.601966449110023
+      zoom: 0.5695624058125983
