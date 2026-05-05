@@ -1,0 +1,207 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: batch-no24-Validator
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.3.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 50
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: code
+      id: 1777971994189-source-1777973172859-target
+      source: '1777971994189'
+      sourceHandle: source
+      target: '1777973172859'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: 1777973172859--1777973355931-target
+      source: '1777973172859'
+      sourceHandle: source
+      target: '1777973355931'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - label: KB JSON String
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: kb_json
+        - label: Batch Rows (JSON String)
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: batch_rows
+      height: 115
+      id: '1777971994189'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(batch_rows: list, kb_json: str) -> dict:\n\
+          \    # Parse the knowledge base JSON\n    try:\n        kb = json.loads(kb_json)\n\
+          \    except:\n        return {\"deficiencies\": {\"deficiencies\": [\"Invalid\
+          \ KB JSON format\"]}}\n    \n    deficiency_list = []\n    \n    for row\
+          \ in batch_rows:\n        # Only check rows where Revision/Abolition Category\
+          \ indicates change or new addition\n        rev_cat = row.get(\"Revision/Abolition\
+          \ Category\", \"\")\n        if rev_cat not in [\"Daily Allowance Change\"\
+          , \"New Addition\"]:\n            continue\n        \n        # Get the\
+          \ allowance amount (skip if None or \"Actual expenses\")\n        amount\
+          \ = row.get(\"Allowance Amount\")\n        if amount is None or amount ==\
+          \ \"Actual expenses\":\n            continue\n        \n        cat1 = row.get(\"\
+          Category 1\", \"\")\n        cat2 = row.get(\"Category 2\", \"\")\n    \
+          \    holiday = row.get(\"Holiday Category\", \"\")\n        \n        expected\
+          \ = None\n        \n        # ----- Exact category matching from real Form\
+          \ 3 -----\n        if cat1 == \"Accommodation Expense\":\n            if\
+          \ \"Executive\" in cat2:\n                expected = kb[\"lodging\"][\"\
+          Executive\"]\n            else:\n                expected = kb[\"lodging\"\
+          ][\"Staff\"]\n        \n        elif cat1 == \"Includes Daily Allowance\
+          \ and nDay Trip (Business)\":\n            # Day trip: use Staff 100km+\
+          \ rate\n            expected = kb[\"day_trip_per_diem\"][\"Staff\"][\"100km_plus\"\
+          ]\n        \n        elif cat1 == \"Includes Daily Allowance and nBusiness\
+          \ Trip (with overnight)\":\n            expected = kb[\"overnight_per_diem\"\
+          ][\"Staff\"]\n        \n        # Add more elif for other categories if\
+          \ they appear in future Form 3 files\n        # Example:\n        # elif\
+          \ cat1 == \"Meal Allowance\":\n        #     if \"Breakfast\" in cat2:\n\
+          \        #         expected = kb[\"meal_allowance\"][\"Breakfast\"]\n  \
+          \      #     elif \"Dinner\" in cat2:\n        #         expected = kb[\"\
+          meal_allowance\"][\"Dinner\"]\n        \n        if expected is not None\
+          \ and amount != expected:\n            deficiency_list.append(\n       \
+          \         f\"{cat1} / {cat2} (Holiday:{holiday}) expected {expected}, found\
+          \ {amount}\"\n            )\n    \n    return {\"deficiencies\": {\"deficiencies\"\
+          : deficiency_list}}"
+        code_language: python3
+        desc: ''
+        outputs:
+          deficiencies:
+            children: null
+            type: object
+        selected: true
+        title: Code
+        type: code
+        variables:
+        - value_selector:
+          - '1777971994189'
+          - batch_rows
+          value_type: string
+          variable: batch_rows
+        - value_selector:
+          - '1777971994189'
+          - kb_json
+          value_type: string
+          variable: kb_json
+      height: 53
+      id: '1777973172859'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1777973172859'
+          - deficiencies
+          value_type: object
+          variable: result
+        selected: false
+        title: End
+        type: end
+      height: 90
+      id: '1777973355931'
+      position:
+        x: 688
+        y: 282
+      positionAbsolute:
+        x: 688
+        y: 282
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 64.96182970251033
+      y: 43.7015945271433
+      zoom: 0.8818875823590722
