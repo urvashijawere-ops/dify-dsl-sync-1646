@@ -1,0 +1,330 @@
+app:
+  description: Transforms Dify DSL files into clean flowcharts for instant documentation
+    and logic verification
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: DSL Flowchart Mapper_v2
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/gemini:0.7.4@5faf411e694e0da130a337347a625a3812b1b7502a0183382d66d92c841bf05a
+kind: app
+version: 0.3.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 50
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: http-request
+      id: 1777868375007-source-1777869471082-target
+      source: '1777868375007'
+      sourceHandle: source
+      target: '1777869471082'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: http-request
+        targetType: llm
+      id: 1777869471082--1777869507478-target
+      source: '1777869471082'
+      sourceHandle: source
+      target: '1777869507478'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: 1777869507478-source-1777959391205-target
+      source: '1777869507478'
+      sourceHandle: source
+      target: '1777959391205'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: end
+      id: 1777959391205-source-1777870530304-target
+      source: '1777959391205'
+      sourceHandle: source
+      target: '1777870530304'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: This node serves as the entry point where the DSL File (with .yml extension)
+          gets uploaded
+        selected: false
+        title: Input DSF File
+        type: start
+        variables:
+        - allowed_file_extensions:
+          - .yml
+          allowed_file_types:
+          - custom
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: DSL_File
+          max_length: 48
+          options: []
+          required: true
+          type: file
+          variable: DSL_File
+      height: 149
+      id: '1777868375007'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data: []
+          type: none
+        desc: Performs a GET request to the provided URL to retrieve the raw text
+          body of the DSL file
+        headers: ''
+        method: get
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: HTTP - Fetch DSL Content
+        type: http-request
+        url: '{{#1777868375007.DSL_File.url#}}'
+        variables: []
+      height: 185
+      id: '1777869471082'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-pro
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: d60f11dc-0e4e-49a7-a85b-eb68d3de1060
+          role: system
+          text: 'Role: You are a Technical Systems Analyst. Your task is to perform
+            a forensic extraction of a Dify DSL file to map its entire architecture.
+
+            Task: Parse the provided DSL and output a Structured Logic Manifest. You
+            must ensure 100% coverage of every node and edge.
+
+
+            Part 1: Node Catalog List every node found in the nodes array.
+
+            Format: [Internal_ID] | [Node_Title] | [Node_Type]
+
+            Part 2: Explicit Edge Mapping Map every connection from the edges array.
+            You must identify the specific logic branch.
+
+            Format: [Source_ID] --(Handle: [sourceHandle])--> [Target_ID]
+
+            Part 3: Functional Clusters Identify logical groupings (e.g., "Step 1-9
+            Uploads", "Currency Conversion Logic", "Session 1 vs 2 branching").
+
+
+            CRITICAL: Do not summarize. Provide the raw structural data needed to
+            rebuild this workflow visually. If there are 60 nodes, there must be 60
+            entries in Part 1.
+
+            DSL File - {{#1777869471082.body#}}'
+        - id: b4bba965-bc3b-46d2-80ac-aeaafa870d34
+          role: user
+          text: DSL File to be analysed {{#1777869471082.body#}}
+        - id: f9fd27a4-f094-48fd-a4a3-59798456e079
+          role: assistant
+          text: ''
+        selected: false
+        structured_output_enabled: true
+        title: LLM - DSL Logic Analyzer
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+            variable_selector:
+            - '1777869471082'
+            - files
+          enabled: false
+      height: 89
+      id: '1777869507478'
+      position:
+        x: 688
+        y: 282
+      positionAbsolute:
+        x: 688
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1777959391205'
+          - text
+          value_type: string
+          variable: text_1
+        selected: false
+        title: End
+        type: end
+      height: 90
+      id: '1777870530304'
+      position:
+        x: 1292
+        y: 282
+      positionAbsolute:
+        x: 1292
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-pro
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 7f675171-5085-44dd-b258-3c9c0d929ddc
+          role: system
+          text: "Goal: This LLM takes the \"Logic Manifest\" from Step 1 and turns\
+            \ it into a high-fidelity visual flowchart using Mermaid characters.\n\
+            \nRole: You are a Systems Visualization Expert. Your task is to transform\
+            \ the provided Logic Manifest into a high-fidelity, comprehensive flowchart.\n\
+            \nConditions: For Router/Condition nodes, label the paths (e.g., NodeA\
+            \ -->|Success| NodeB). \nSubgraphs: Group nodes that belong to the same\
+            \ logical sub-flow or iteration if identifiable.\n\nOutput Format: Provide\
+            \ a brief \"Flow Summary\" (2-3 sentences). Provide the Mermaid code block\
+            \ starting with graph TD. \nStrict Rule: Ensure the Mermaid syntax is\
+            \ valid. Do not use special characters (like quotes or brackets) inside\
+            \ node IDs unless escaped.\n\nINPUT FOR ALL THE NODES - {{#1777869507478.text#}}"
+        - id: 74ea6af5-7fe3-4da7-805a-9f4c1d07fc0c
+          role: user
+          text: 'Nodes to be converted as flowchart: {{#1777869507478.text#}}'
+        selected: true
+        structured_output_enabled: true
+        title: LLM - Flowchart Architect
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: '1777959391205'
+      position:
+        x: 992
+        y: 282
+      positionAbsolute:
+        x: 992
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -399.4724358959645
+      y: -49.16891788722438
+      zoom: 0.698519536018406
