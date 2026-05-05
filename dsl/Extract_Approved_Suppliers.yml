@@ -1,0 +1,220 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: Extract_Approved_Suppliers
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.3.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 50
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: code
+      id: 1777545549715-source-1777545670217-target
+      source: '1777545549715'
+      sourceHandle: source
+      target: '1777545670217'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: 1777545670217-source-1777548155872-target
+      source: '1777545670217'
+      sourceHandle: source
+      target: '1777548155872'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: pms_file
+          max_length: 5
+          options:
+          - ''
+          required: true
+          type: file-list
+          variable: pms_file
+      height: 89
+      id: '1777545549715'
+      position:
+        x: 67.14285714285717
+        y: 200.21428571428572
+      positionAbsolute:
+        x: 67.14285714285717
+        y: 200.21428571428572
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import pandas as pd\nimport io\n\ndef main(file_bytes: bytes) -> dict:\n\
+          \    try:\n        df_raw = pd.read_excel(io.BytesIO(file_bytes), sheet_name=0,\
+          \ header=None)\n    except Exception as e:\n        return {\"suppliers\"\
+          : [], \"message\": f\"Error reading file: {str(e)}\"}\n\n    # ==================\
+          \ CONFIGURATION ==================\n    # Fixed columns (index-display name)\
+          \ - adjust if there are any changes in PMS right now it will be always static\n\
+          \    FIXED_COLUMNS = {\n        2: \"Company Category\",\n        4: \"\
+          Supplier / Business Partner Name\",\n        6: \"Buyer\",\n        19:\
+          \ \"Supplier / Business Partner Quote Amount (K$)\",\n        31: \"TBL\
+          \ Unit Price Level\",\n        37: \"Comments on TBL Negotiation Status\"\
+          \n    }\n    # Status columns (index-display name) – used only for filtering\n\
+          \    STATUS_COLUMNS = {\n        40: \"Quotation Calculation Sheet Form\
+          \ 2 Status\",\n        42: \"Unit Price Revision Sheet (short form) Status\"\
+          ,\n        44: \"Business Travel & Various Allowance Quotation Sheet Status\"\
+          ,\n        46: \"Travel Expenses (general) Regulations Status\",\n    }\n\
+          \    # Approved values (case‑insensitive)\n    APPROVED_VALUES = [\"格納済\"\
+          , \"Approved\", \"Stored\", \"Registered\"]\n    # ==================================================\n\
+          \n    def is_approved(value):\n        s = str(value).strip()\n        if\
+          \ not s or s == 'nan':\n            return False\n        return s in APPROVED_VALUES\
+          \ or s.lower() in [v.lower() for v in APPROVED_VALUES]\n\n    # Extract\
+          \ fixed columns\n    data = {}\n    for idx, name in FIXED_COLUMNS.items():\n\
+          \        if idx < df_raw.shape[1]:\n            data[name] = df_raw[idx].values\n\
+          \        else:\n            data[name] = []\n\n    # Also extract status\
+          \ columns temporarily (for filtering)\n    for idx, name in STATUS_COLUMNS.items():\n\
+          \        if idx < df_raw.shape[1]:\n            data[name] = df_raw[idx].values\n\
+          \        else:\n            data[name] = []\n\n    df = pd.DataFrame(data)\n\
+          \n    # Remove header rows and empty supplier names\n    header_phrases\
+          \ = [\"Supplier / Business Partner Name\", \"Supplier Name\", \"Business\
+          \ Partner Name\"]\n    mask = df[\"Supplier / Business Partner Name\"].notna()\n\
+          \    mask &= df[\"Supplier / Business Partner Name\"].astype(str).str.strip()\
+          \ != \"\"\n    mask &= ~df[\"Supplier / Business Partner Name\"].astype(str).str.strip().isin(header_phrases)\n\
+          \    df = df[mask].reset_index(drop=True)\n\n    # Filter: keep only suppliers\
+          \ with at least one approved status\n    status_cols = list(STATUS_COLUMNS.values())\n\
+          \    approved_rows = []\n    for _, row in df.iterrows():\n        approved_templates\
+          \ = []\n        for col in status_cols:\n            if col in row and is_approved(row[col]):\n\
+          \                # Remove \" Status\" suffix for cleaner display\n     \
+          \           template_name = col.replace(\" Status\", \"\")\n           \
+          \     approved_templates.append(template_name)\n        if approved_templates:\n\
+          \            fixed_data = {k: row[k] for k in FIXED_COLUMNS.values()}\n\
+          \            fixed_data[\"Approved Templates\"] = \", \".join(approved_templates)\n\
+          \            approved_rows.append(fixed_data)\n\n    approved_df = pd.DataFrame(approved_rows)\n\
+          \    suppliers = approved_df.to_dict(orient=\"records\")\n\n    return {\n\
+          \        \"suppliers\": suppliers,\n        \"message\": f\"Extracted {len(suppliers)}\
+          \ approved supplier(s).\"\n    }"
+        code_language: python3
+        desc: Code for PMS extraction
+        outputs:
+          message:
+            children: null
+            type: string
+          suppliers:
+            children: null
+            type: array[object]
+        selected: false
+        title: Code
+        type: code
+        variables:
+        - value_selector:
+          - '1777545549715'
+          - pms_file
+          value_type: string
+          variable: file_bytes
+        - value_selector: []
+          variable: ''
+      height: 81
+      id: '1777545670217'
+      position:
+        x: 404.2857142857144
+        y: 223.5
+      positionAbsolute:
+        x: 404.2857142857144
+        y: 223.5
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1777545670217'
+          - suppliers
+          value_type: array[string]
+          variable: suppliers
+        selected: false
+        title: End
+        type: end
+      height: 90
+      id: '1777548155872'
+      position:
+        x: 708.2857142857144
+        y: 223.5
+      positionAbsolute:
+        x: 708.2857142857144
+        y: 223.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 62.889346194002314
+      y: -3.861705662215769
+      zoom: 1.1530274241746006
