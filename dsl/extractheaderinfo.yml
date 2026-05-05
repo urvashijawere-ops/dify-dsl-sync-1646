@@ -1,0 +1,168 @@
+app:
+  description: Reads the Form 03 from Travel expense- and extracts the key header
+    data.
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: extract-header-info
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.3.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 50
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: code
+      id: 1777889705719-source-1777889721608-target
+      source: '1777889705719'
+      sourceHandle: source
+      target: '1777889721608'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: 1777889721608--1777892319249-target
+      source: '1777889721608'
+      sourceHandle: source
+      target: '1777892319249'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables: []
+      height: 53
+      id: '1777889705719'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import pandas as pd\nimport io\n\ndef main(file: bytes) -> dict:\n\
+          \    df = pd.read_excel(io.BytesIO(file), sheet_name=\"Form 3\", header=None)\n\
+          \    \n    date, supplier_name, supplier_code = \"\", \"\", \"\"\n    \n\
+          \    for idx, row in df.iterrows():\n        row_str = row.astype(str).values\n\
+          \        if \"Date\" in row_str:\n            date = df.iloc[idx, 1]\n \
+          \       if \"Supplier\" in row_str and \"Name\" in row_str:\n          \
+          \  supplier_name = df.iloc[idx, 1]\n        if \"Supplier Code\" in row_str:\n\
+          \            supplier_code = df.iloc[idx, 1]\n\n    return {\"header_data\"\
+          : {\"date\": date, \"supplier_name\": supplier_name, \"supplier_code\":\
+          \ supplier_code}}"
+        code_language: python3
+        desc: ''
+        outputs:
+          header_data:
+            children: null
+            type: object
+        selected: false
+        title: Code
+        type: code
+        variables:
+        - value_selector:
+          - sys
+          - files
+          value_type: array[file]
+          variable: file
+      height: 53
+      id: '1777889721608'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1777889721608'
+          - header_data
+          value_type: object
+          variable: result
+        selected: false
+        title: End
+        type: end
+      height: 90
+      id: '1777892319249'
+      position:
+        x: 688
+        y: 282
+      positionAbsolute:
+        x: 688
+        y: 282
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 64.73659127798737
+      y: 17.108956266325237
+      zoom: 0.9075191553171609
