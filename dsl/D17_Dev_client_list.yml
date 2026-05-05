@@ -1,0 +1,1599 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: D-17 Dev_client list
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.3.1
+workflow:
+  conversation_variables:
+  - description: ''
+    id: 2ac861e3-dd02-44e8-bda0-46dfed49de7e
+    name: max_file_sixe
+    selector:
+    - conversation
+    - max_file_sixe
+    value: 10
+    value_type: integer
+  - description: ''
+    id: e331492b-107a-4a8f-9f82-900556e70cab
+    name: client_column_pms
+    selector:
+    - conversation
+    - client_column_pms
+    value: ' Supplier / Business Partner Name'
+    value_type: string
+  - description: '50'
+    id: d3207c83-4b71-452c-8bc3-e10d3c09c8d4
+    name: number_of_rows
+    selector:
+    - conversation
+    - number_of_rows
+    value: 0
+    value_type: integer
+  - description: Sheet name for sheet verification
+    id: 94784148-f34f-4e54-a7bd-9dd97451f582
+    name: sheet_name
+    selector:
+    - conversation
+    - sheet_name
+    value: ' Negotiation Status Summary Tab'
+    value_type: string
+  - description: this variable stores all type of file extensions are required for
+      this chatflow in comma separated manner.
+    id: a08af4c5-a600-456b-8b61-442e546a8385
+    name: file_extension
+    selector:
+    - conversation
+    - file_extension
+    value: xlsx
+    value_type: string
+  - description: ''
+    id: 851397a6-d70a-4d43-b3c5-e37c451f5c9b
+    name: progress_management_sheet
+    selector:
+    - conversation
+    - progress_management_sheet
+    value: 0
+    value_type: integer
+  - description: this variable stores all static data in both language English and
+      Japanese
+    id: bd9e5317-80d2-40b1-b034-1fb17ccd21ea
+    name: static_data
+    selector:
+    - conversation
+    - static_data
+    value:
+      button_template: '{index}. <button type="button" data-message="{id}">{label}</button>'
+      document_received_msg:
+        en: Progress Management Sheet uploaded successfully. We are now processing
+          the records; please wait a moment while we generate the client list.
+        jp: 進捗管理表のアップロードが完了しました。現在、レコードを処理しております。取引先一覧を生成しますので、少々お待ちください。
+      error_message_document_received:
+        en: Something went wrong with the previous upload. Could you please re-upload
+          the *Progress Management Sheet*?
+        jp: 前回のアップロード処理で問題が発生しました。お手数ですが、進捗管理表を再度アップロードしていただけますでしょうか。
+      error_message_language:
+        buttons:
+        - id: English
+          label: English
+        - id: 日本語
+          label: 日本語
+        en_jp: "Sorry, we could not update your preference, could you re-select your\
+          \ preferred langauge.\n\n 申し訳ありませんが、お客様の設定を更新できませんでした。もう一度ご希望の言語を選択してください。"
+      file_missing_msg:
+        en: A *Progress Management Sheet* file is required for this process. Please
+          upload it.
+        jp: この処理には進捗管理表が必要です。進捗管理表をアップロードしてください。
+      pms_sheet_name:
+        en: The Progress Management Sheet file name must contain '02_[○○ Procurement]
+          Summary of Negotiation Status'.
+        jp: ファイル名が正しくありません。「02_[○○ Procurement] Summary of Negotiation Status」が含まれている必要があります。
+      request_file_msg:
+        en: A *Progress Management Sheet* file is required for this process. Please
+          upload it.
+        jp: この処理には進捗管理表が必要です。進捗管理表をアップロードしてください。
+      upload_file_size_error_message:
+        en: Please provide a Progress Management Sheet file that is smaller than 10MB.
+        jp: 10MB未満の進捗管理表ファイルをアップロードしてください。
+      upload_file_type_error_message:
+        en: Please upload the *Progress Management Sheet* file in **Excel ** format.
+        jp: 進捗管理表はExcel形式でアップロードしてください。
+      user_guide:
+        en: "Your preferred language has been set to English. \n\n **Operating Procedure**:\n\
+          \n  **Interface Configuration:** Select your preferred language (Japanese\
+          \ or English) to initialize the localized interface.\n**Requisition Input:**\
+          \ Submit your requirements by describing them in the natural language chat\
+          \ and by uploading supporting documentation  (Excel Format). \n**Client\
+          \ Selection:** Please select one client from the list.  \n**Recommendation:**\
+          \ Recommends how to correct errors, address omissions, and fix other deficiencies.\
+          \  \n**Review and Confirm:** BPO Staff/Person in charge can review and confirm\
+          \ whether he wants to rectify the data or send a notification(email) to\
+          \ the Business User/Vendor.  \n**Email Draft:** Generates a professional\
+          \ notification email based on the findings.  \n\nPlease upload the document\
+          \ - Progress Management Sheet"
+        jp: "ご希望の言語は日本語に設定されました。  \n\n**操作手順**: \n\nインターフェース設定：\n ご希望の言語（日本語または英語）を選択し、ローカライズされたインターフェースを初期化します。\
+          \ \n\n依頼内容の入力：\n 自然言語チャットで要件を説明し、関連資料（Excel形式）をアップロードして送信してください。\n\n取引先選択：\n\
+          \ 表示された一覧から、対象となる取引先を1社選択してください。 \n\n推奨対応：\n エラー、記載漏れ、その他の不備に対して、修正方法および対応方針を推奨します。\
+          \ \n\n確認および判断：\n BPOスタッフ / 担当者は、AIの出力内容を確認し、データを修正するか、または業務ユーザー / ベンダーへ通知メールを送信するかを判断します。\
+          \ \n\nメール案作成：\n 検出された内容に基づき、業務利用に適した通知メール案を生成します。  \n\n 資料をアップロードしてください：進捗管理表"
+    value_type: object
+  - description: This variable stores user's preferred language, the default one is
+      None
+    id: 1527706c-6116-450d-a31b-12822812709f
+    name: preferred_lang
+    selector:
+    - conversation
+    - preferred_lang
+    value: ''
+    value_type: string
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - document
+      allowed_file_upload_methods:
+      - local_file
+      enabled: true
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 50
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 1
+    opening_statement: 'Welcome to “Unit Price Revision Agent”.
+
+
+      Please select your Preferred language.
+
+
+      ***
+
+      「単価改定エージェント」へようこそ
+
+
+      ご希望の言語を選択してください。
+
+      ***'
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions:
+    - English
+    - 日本語
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: answer
+      id: 1776057413585-source-1776057896250-target
+      selected: false
+      source: '1776057413585'
+      sourceHandle: source
+      target: '1776057896250'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: if-else
+      id: 1775796563709-source-1775804011997-target
+      selected: false
+      source: '1775796563709'
+      sourceHandle: source
+      target: '1775804011997'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: code
+      id: 1775804011997-2ebab099-635c-4eae-ad45-2be7a7d26078-1776188847640-target
+      selected: false
+      source: '1775804011997'
+      sourceHandle: 2ebab099-635c-4eae-ad45-2be7a7d26078
+      target: '1776188847640'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: answer
+      id: 1776188847640-source-1776189352854-target
+      selected: false
+      source: '1776188847640'
+      sourceHandle: source
+      target: '1776189352854'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1775804011997-false-1776335836167-target
+      selected: false
+      source: '1775804011997'
+      sourceHandle: 'false'
+      target: '1776335836167'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: tool
+      id: 1775804011997-true-1777021956002-target
+      selected: false
+      source: '1775804011997'
+      sourceHandle: 'true'
+      target: '1777021956002'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: code
+      id: 1777021956002-source-1777022031701-target
+      selected: false
+      source: '1777021956002'
+      sourceHandle: source
+      target: '1777022031701'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 1777022031701-source-1777022146398-target
+      selected: false
+      source: '1777022031701'
+      sourceHandle: source
+      target: '1777022146398'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1777022146398-false-1777022300038-target
+      selected: false
+      source: '1777022146398'
+      sourceHandle: 'false'
+      target: '1777022300038'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: assigner
+      id: 1777022146398-true-1776153517859-target
+      selected: false
+      source: '1777022146398'
+      sourceHandle: 'true'
+      target: '1776153517859'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: assigner
+        targetType: code
+      id: 1776153517859-source-1777022445744-target
+      selected: false
+      source: '1776153517859'
+      sourceHandle: source
+      target: '1777022445744'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: answer
+      id: 1777022445744-source-1777022598833-target
+      selected: false
+      source: '1777022445744'
+      sourceHandle: source
+      target: '1777022598833'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: tool
+      id: 1775804011997-628168fc-d129-4914-9c82-5f9b5f4b8c2b-1777452194414-target
+      selected: false
+      source: '1775804011997'
+      sourceHandle: 628168fc-d129-4914-9c82-5f9b5f4b8c2b
+      target: '1777452194414'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: code
+      id: 1777452194414-source-1776057413585-target
+      selected: false
+      source: '1777452194414'
+      sourceHandle: source
+      target: '1776057413585'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: tool
+        targetType: code
+      id: 1777021956002-fail-branch-1776326940664-target
+      selected: false
+      source: '1777021956002'
+      sourceHandle: fail-branch
+      target: '1776326940664'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: code
+      id: 1776188847640-fail-branch-1776326940664-target
+      selected: false
+      source: '1776188847640'
+      sourceHandle: fail-branch
+      target: '1776326940664'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: tool
+        targetType: code
+      id: 1777452194414-fail-branch-1776326940664-target
+      selected: false
+      source: '1777452194414'
+      sourceHandle: fail-branch
+      target: '1776326940664'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: answer
+      id: 1776326940664-source-1776331413831-target
+      selected: false
+      source: '1776326940664'
+      sourceHandle: source
+      target: '1776331413831'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: tool
+      id: 1776057413585-source-1777977640192-target
+      source: '1776057413585'
+      sourceHandle: source
+      target: '1777977640192'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: answer
+      id: 1777977640192--1777978208606-target
+      source: '1777977640192'
+      sourceHandle: source
+      target: '1777978208606'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: User Input
+        type: start
+        variables: []
+      height: 53
+      id: '1775796563709'
+      position:
+        x: 61.279807562300334
+        y: 118.01613465764967
+      positionAbsolute:
+        x: 61.279807562300334
+        y: 118.01613465764967
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: not empty
+            id: f36afb4e-ce99-451a-9d95-3b8349d428f8
+            value: ''
+            varType: string
+            variable_selector:
+            - sys
+            - query
+          - comparison_operator: empty
+            id: a7ecdd21-ff37-41a6-acc3-a9b4824331fc
+            value: None
+            varType: string
+            variable_selector:
+            - conversation
+            - preferred_lang
+          id: 'true'
+          logical_operator: and
+        - case_id: 2ebab099-635c-4eae-ad45-2be7a7d26078
+          conditions:
+          - comparison_operator: not empty
+            id: d23faeb0-3329-4254-84de-8cdae048b6b5
+            value: ''
+            varType: string
+            variable_selector:
+            - sys
+            - query
+          - comparison_operator: empty
+            id: 39c870d2-4b02-45e8-9024-712f0a0d7b52
+            value: ''
+            varType: array[file]
+            variable_selector:
+            - sys
+            - files
+          - comparison_operator: not empty
+            id: 07c71801-74b7-4323-bd87-50e122ceab88
+            value: ''
+            varType: string
+            variable_selector:
+            - conversation
+            - preferred_lang
+          id: 2ebab099-635c-4eae-ad45-2be7a7d26078
+          logical_operator: and
+        - case_id: 628168fc-d129-4914-9c82-5f9b5f4b8c2b
+          conditions:
+          - comparison_operator: not empty
+            id: 431110da-0e65-4b3d-8ec3-d95a588a35de
+            value: ''
+            varType: string
+            variable_selector:
+            - sys
+            - query
+          - comparison_operator: not empty
+            id: 2e8e17db-70e4-4da7-9da7-4744c96d35cb
+            value: ''
+            varType: array[file]
+            variable_selector:
+            - sys
+            - files
+          - comparison_operator: not empty
+            id: 27a9ccb3-e833-4f0f-9307-73006ff32bd7
+            value: ''
+            varType: string
+            variable_selector:
+            - conversation
+            - preferred_lang
+          id: 628168fc-d129-4914-9c82-5f9b5f4b8c2b
+          logical_operator: and
+        - case_id: 0e4390ee-b075-4261-9012-4c44af56cac5
+          conditions:
+          - comparison_operator: not empty
+            id: 1a532462-ac83-49ee-8cdb-11d2de5bdc41
+            value: ''
+            varType: string
+            variable_selector:
+            - sys
+            - query
+          - comparison_operator: ≠
+            id: 9fba8580-5a84-4763-b366-4e55fc8e7bcb
+            value: '0'
+            varType: number
+            variable_selector:
+            - conversation
+            - progress_management_sheet
+          id: 0e4390ee-b075-4261-9012-4c44af56cac5
+          logical_operator: and
+        desc: This node handle input traffics coming from user across downstream node.
+        selected: false
+        title: Orchestrator
+        type: if-else
+      height: 469
+      id: '1775804011997'
+      position:
+        x: 373.4343196299668
+        y: 139.01613465764967
+      positionAbsolute:
+        x: 373.4343196299668
+        y: 139.01613465764967
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "def main(file_respnse: list, static_data: dict, preferred_lang: str,\
+          \ sheet_name: str):\n    # 1. Check if the file_respnse list is empty or\
+          \ null\n    if not file_respnse or len(file_respnse) == 0:\n        msg_obj\
+          \ = static_data.get(\"file_missing_msg\", {})\n        msg = msg_obj.get(preferred_lang)\
+          \ or msg_obj.get(\"jp\") or msg_obj.get(\"ja\")\n        return {\n    \
+          \        \"result\": msg, \n            \"file_counter\": 0,\n         \
+          \   \"preferred_lang\": preferred_lang  # Added here\n        }\n\n    file_data\
+          \ = file_respnse[0]\n    errors = [] # List to collect all active errors\n\
+          \n    # Helper function to fetch messages from static_data (Japanese Fix\
+          \ included)\n    def get_translated_msg(key):\n        msg_obj = static_data.get(key,\
+          \ {})\n        # Check preferred, then ja, then jp\n        text = msg_obj.get(preferred_lang)\
+          \ or msg_obj.get(\"ja\") or msg_obj.get(\"jp\")\n        return text if\
+          \ text else \"\"\n\n    # 2. Condition 1: Check File Size (> 10MB)\n   \
+          \ total_size = file_data.get(\"total_size\", 0)\n    if total_size > (10\
+          \ * 1024 * 1024):\n        msg = get_translated_msg(\"upload_file_size_error_message\"\
+          )\n        if msg: errors.append(msg)\n\n    # 3. Condition 2: Check File\
+          \ Type (NOT .xlsx)\n    file_info = file_data.get(\"file_info\", [{}])[0]\n\
+          \    file_type = file_info.get(\"type\", \"\").lower()\n    if file_type\
+          \ != \"xlsx\":\n        msg = get_translated_msg(\"upload_file_type_error_message\"\
+          )\n        if msg: errors.append(msg)\n\n    # 4. Condition 3: Check File\
+          \ Name using pms_sheet_name from Static Data\n    uploaded_file_name = file_info.get(\"\
+          name\", \"\") \n    if sheet_name not in uploaded_file_name:\n        msg\
+          \ = get_translated_msg(\"pms_sheet_name\")\n        if msg: errors.append(msg)\n\
+          \n    # 5. Output Logic: If any error remains, show only those errors\n\
+          \    if errors:\n        return {\n            \"result\": \"\\n\".join(errors),\
+          \ \n            \"file_counter\": 0,\n            \"preferred_lang\": preferred_lang\
+          \  # Added here\n        }\n\n    # 6. Success Scenario\n    if str(file_data.get(\"\
+          is_valid\")).lower() == \"true\":\n        return {\n            \"result\"\
+          : get_translated_msg(\"document_received_msg\"),\n            \"file_counter\"\
+          : 1,\n            \"preferred_lang\": preferred_lang  # Added here\n   \
+          \     }\n    else:\n        # Fallback to general error\n        api_error\
+          \ = file_data.get(\"error\")\n        fallback_error = get_translated_msg(\"\
+          error_message_document_received\")\n        return {\n            \"result\"\
+          : api_error if api_error else fallback_error,\n            \"file_counter\"\
+          : 0,\n            \"preferred_lang\": preferred_lang  # Added here\n   \
+          \     }"
+        code_language: python3
+        desc: 'This node takes three input : array of object from previous node, static
+          data and preferred language and check validation if file/s are valid then
+          return 1 as file counter else return 0 and the respective message.'
+        outputs:
+          file_counter:
+            children: null
+            type: number
+          preferred_lang:
+            children: null
+            type: string
+          result:
+            children: null
+            type: string
+        selected: true
+        title: Document received message
+        type: code
+        variables:
+        - value_selector:
+          - conversation
+          - static_data
+          value_type: object
+          variable: static_data
+        - value_selector:
+          - conversation
+          - preferred_lang
+          value_type: string
+          variable: preferred_lang
+        - value_selector:
+          - '1777452194414'
+          - json
+          value_type: array[object]
+          variable: file_respnse
+        - value_selector:
+          - conversation
+          - sheet_name
+          value_type: string
+          variable: sheet_name
+      height: 161
+      id: '1776057413585'
+      position:
+        x: 1112.4161607609847
+        y: 431.3745880206932
+      positionAbsolute:
+        x: 1112.4161607609847
+        y: 431.3745880206932
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1776057413585.result#}}'
+        desc: This node displays document received message the user based on language
+          preference.
+        selected: false
+        title: Doc received output
+        type: answer
+        variables: []
+      height: 163
+      id: '1776057896250'
+      position:
+        x: 1459.6338170278364
+        y: 312.1073864326263
+      positionAbsolute:
+        x: 1459.6338170278364
+        y: 312.1073864326263
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: This node updates user preferred language to the variable preferred_lang
+          as en or jp
+        items:
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1777022031701'
+          - result
+          variable_selector:
+          - conversation
+          - preferred_lang
+          write_mode: over-write
+        selected: false
+        title: Update preferred language
+        type: assigner
+        version: '2'
+      height: 145
+      id: '1776153517859'
+      position:
+        x: 1944.3296427516207
+        y: -45.85731546941031
+      positionAbsolute:
+        x: 1944.3296427516207
+        y: -45.85731546941031
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "def main(static_data: dict, preferred_lang: str):\n    \n    # Access\
+          \ the nested object using the new structure\n    msg = static_data.get(\"\
+          file_missing_msg\", {}).get(preferred_lang)\n\n    return {\n        \"\
+          result\": msg\n    }"
+        code_language: python3
+        desc: This node handles missing input file from the user and request them
+          to upload to get started.
+        error_strategy: fail-branch
+        outputs:
+          result:
+            children: null
+            type: string
+        selected: false
+        title: Handling Missing file
+        type: code
+        variables:
+        - value_selector:
+          - conversation
+          - static_data
+          value_type: object
+          variable: static_data
+        - value_selector:
+          - conversation
+          - preferred_lang
+          value_type: string
+          variable: preferred_lang
+      height: 149
+      id: '1776188847640'
+      position:
+        x: 714.682302537459
+        y: 236.44968931280027
+      positionAbsolute:
+        x: 714.682302537459
+        y: 236.44968931280027
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1776188847640.result#}}'
+        desc: Thid node display file missing output to request the user to upload
+          the same
+        selected: false
+        title: file missing output
+        type: answer
+        variables: []
+      height: 147
+      id: '1776189352854'
+      position:
+        x: 1162.3532660277638
+        y: 229.39381595065174
+      positionAbsolute:
+        x: 1162.3532660277638
+        y: 229.39381595065174
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "\ndef main(preferred_lang_error: str, missing_file_error: str,document_rcv_error:str,\
+          \ preferred_lang:str,static_data:dict):\n\n    # execute if handling preferred\
+          \ language code node failed.\n    if preferred_lang_error:\n        button_template\
+          \ = static_data.get(\"button_template\", \"\")\n        lang_msg_data =\
+          \ static_data.get(\"fail_branch_language_msg\", {})\n        message = lang_msg_data.get(\"\
+          en_jp\", \"\")\n        buttons_list = lang_msg_data.get(\"buttons\", [])\n\
+          \n        formatted_buttons = []\n        for idx, btn in enumerate(buttons_list,\
+          \ start=1):\n            btn_html = button_template.format(\n          \
+          \      index=idx,\n                id=btn[\"id\"],\n                label=btn[\"\
+          label\"]\n            )\n            formatted_buttons.append(btn_html)\n\
+          \n        final_output = f\"{message}\\n\\n\" + \"\\n\".join(formatted_buttons)\n\
+          \n        return{\n            \"result\": final_output\n        }\n\n \
+          \   elif missing_file_error:\n        if preferred_lang == \"en\":\n   \
+          \         msg = \"A file is required for this process. Please upload it.\"\
+          \n        else:\n            msg = \"この処理にはファイルが必要です。アップロードしてください。\"\n \
+          \       return{\n            \"result\": msg\n        }\n    elif document_rcv_error:\n\
+          \        if preferred_lang == \"en\":\n            msg = \"Could you please\
+          \ re-upload the document-Progress Management Sheet?\"\n        else:\n \
+          \           msg = \"進捗管理シートのドキュメントを再度アップロードしていただけますか？\"\n        return{\n\
+          \            \"result\": msg\n        }\n    else:\n        return{\n  \
+          \          \"result\": \"All code node is working fine.\"\n        }"
+        code_language: python3
+        desc: This node handle errors in case of failure of connected code node and
+          return the respective message to downstream node.
+        outputs:
+          result:
+            children: null
+            type: string
+        selected: false
+        title: Global Error handler
+        type: code
+        variables:
+        - value_selector:
+          - '1777021956002'
+          - error_message
+          value_type: string
+          variable: preferred_lang_error
+        - value_selector:
+          - '1776188847640'
+          - error_message
+          value_type: string
+          variable: missing_file_error
+        - value_selector:
+          - '1777452194414'
+          - text
+          value_type: string
+          variable: document_rcv_error
+        - value_selector:
+          - conversation
+          - static_data
+          value_type: object
+          variable: static_data
+        - value_selector:
+          - conversation
+          - preferred_lang
+          value_type: string
+          variable: preferred_lang
+      height: 129
+      id: '1776326940664'
+      position:
+        x: 2285.502758533631
+        y: -307.93693388765735
+      positionAbsolute:
+        x: 2285.502758533631
+        y: -307.93693388765735
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1776326940664.result#}}'
+        desc: This node display message based on failed branch
+        selected: false
+        title: Message for different fail branch
+        type: answer
+        variables: []
+      height: 147
+      id: '1776331413831'
+      position:
+        x: 2598.502758533631
+        y: -307.93693388765735
+      positionAbsolute:
+        x: 2598.502758533631
+        y: -307.93693388765735
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        author: kumar_vi@itg.hitachi.co.jp
+        desc: ''
+        height: 88
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"This
+          code node captures global errors in case of failure of any connect node
+          with it and return the message associated with it.","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":null,"format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 469
+      height: 88
+      id: '1776334653462'
+      position:
+        x: 1995.533666592206
+        y: -454.86546201152464
+      positionAbsolute:
+        x: 1995.533666592206
+        y: -454.86546201152464
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 469
+    - data:
+        answer: Thank you, we received your query
+        desc: This is placeholder for input coming from user post file upload
+        selected: false
+        title: post file upload
+        type: answer
+        variables: []
+      height: 145
+      id: '1776335836167'
+      position:
+        x: 719.9759708830964
+        y: 666.9299753620836
+      positionAbsolute:
+        x: 719.9759708830964
+        y: 666.9299753620836
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: This workflow validate the user input if they have selected their preferred
+          language or not and return preferred language as key such "en" for English
+          and in case no language selected, request the user to choose language first.
+        error_strategy: fail-branch
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: this receives user's query to validate language preference
+            ja_JP: this receives user's query to validate language preference
+            pt_BR: this receives user's query to validate language preference
+            zh_Hans: this receives user's query to validate language preference
+          label:
+            en_US: User input
+            ja_JP: User input
+            pt_BR: User input
+            zh_Hans: User input
+          llm_description: this receives user's query to validate language preference
+          max: null
+          min: null
+          name: user_query
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        params:
+          user_query: ''
+        provider_id: 7fb8ca4f-fc35-415e-94d5-48edc65fcf26
+        provider_name: COM_Bilingual_Workflow
+        provider_type: workflow
+        selected: false
+        title: COM_Bilingual_Workflow
+        tool_configurations: {}
+        tool_description: This workflow automate the language validation as per requirement
+          and return user's preferred language. Currently it supports English and
+          Japanese.
+        tool_label: COM_Bilingual_Workflow
+        tool_name: comBilingualWorkflow
+        tool_node_version: '2'
+        tool_parameters:
+          user_query:
+            type: mixed
+            value: '{{#sys.query#}}'
+        type: tool
+      height: 213
+      id: '1777021956002'
+      position:
+        x: 719.9759708830964
+        y: -15.113408246636872
+      positionAbsolute:
+        x: 719.9759708830964
+        y: -15.113408246636872
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "\ndef main(lang_result:list):\n    lang_obj = lang_result[0]\n    return\
+          \ {\n        \"result\": lang_obj.get(\"result\", \"\")\n    }"
+        code_language: python3
+        desc: This code node format response received from bilingual workflow so that
+          downstream node can use it to display respective message related to language
+          preference.
+        outputs:
+          result:
+            children: null
+            type: string
+        selected: false
+        title: code_format_response
+        type: code
+        variables:
+        - value_selector:
+          - '1777021956002'
+          - json
+          value_type: array[object]
+          variable: lang_result
+      height: 145
+      id: '1777022031701'
+      position:
+        x: 1203.7440079254611
+        y: -15.113408246636872
+      positionAbsolute:
+        x: 1203.7440079254611
+        y: -15.113408246636872
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: 27a20c63-f9fc-4f0d-8654-8bde83ef0a9d
+            value: en
+            varType: string
+            variable_selector:
+            - '1777022031701'
+            - result
+          - comparison_operator: is
+            id: e4f5feae-f94d-4d9b-9564-b27b25f9bd84
+            value: jp
+            varType: string
+            variable_selector:
+            - '1777022031701'
+            - result
+          id: 'true'
+          logical_operator: or
+        desc: This node checks if the user has selected their preferred language if
+          yes it will return language code like "en" else prompt the user to select
+          language first.
+        selected: false
+        title: Yes/No
+        type: if-else
+      height: 227
+      id: '1777022146398'
+      position:
+        x: 1503.7440079254611
+        y: -15.113408246636872
+      positionAbsolute:
+        x: 1503.7440079254611
+        y: -15.113408246636872
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1777022031701.result#}}'
+        desc: ''
+        selected: false
+        title: Request Language
+        type: answer
+        variables: []
+      height: 103
+      id: '1777022300038'
+      position:
+        x: 1791.634947076113
+        y: 146.78730205736468
+      positionAbsolute:
+        x: 1791.634947076113
+        y: 146.78730205736468
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "\ndef main(preferred_lang: str, static_data: dict):\n    return {\n\
+          \        \"result\": static_data.get(\"user_guide\",{}).get(preferred_lang)\n\
+          \    }"
+        code_language: python3
+        desc: This code node fetch user guide based on preferred language from static
+          data and pass to next node to display the same message.
+        outputs:
+          result:
+            children: null
+            type: string
+        selected: false
+        title: code_fetch_user_guide
+        type: code
+        variables:
+        - value_selector:
+          - conversation
+          - static_data
+          value_type: object
+          variable: static_data
+        - value_selector:
+          - conversation
+          - preferred_lang
+          value_type: string
+          variable: preferred_lang
+      height: 129
+      id: '1777022445744'
+      position:
+        x: 2248.3296427516207
+        y: -45.85731546941031
+      positionAbsolute:
+        x: 2248.3296427516207
+        y: -45.85731546941031
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1777022445744.result#}}'
+        desc: ''
+        selected: false
+        title: User guide output
+        type: answer
+        variables: []
+      height: 103
+      id: '1777022598833'
+      position:
+        x: 2552.3296427516207
+        y: -45.85731546941031
+      positionAbsolute:
+        x: 2552.3296427516207
+        y: -45.85731546941031
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: This workflow validate the file input in terms of file size, extension
+          and return response in preferred language.
+        error_strategy: fail-branch
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: file_input
+            ja_JP: file_input
+            pt_BR: file_input
+            zh_Hans: file_input
+          llm_description: ''
+          max: null
+          min: null
+          name: file_input
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: files
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: file extension
+            ja_JP: file extension
+            pt_BR: file extension
+            zh_Hans: file extension
+          llm_description: ''
+          max: null
+          min: null
+          name: required_extension
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: file size
+            ja_JP: file size
+            pt_BR: file size
+            zh_Hans: file size
+          llm_description: ''
+          max: null
+          min: null
+          name: max_file_size
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: preferred_language
+            ja_JP: preferred_language
+            pt_BR: preferred_language
+            zh_Hans: preferred_language
+          llm_description: ''
+          max: null
+          min: null
+          name: preferred_language
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        params:
+          file_input: ''
+          max_file_size: ''
+          preferred_language: ''
+          required_extension: ''
+        provider_id: 930076cb-f494-4f78-8d24-87495300afdc
+        provider_name: COM_File_Validator
+        provider_type: workflow
+        retry_config:
+          max_retries: 3
+          retry_enabled: false
+          retry_interval: 1000
+        selected: false
+        title: COM_File_Validator
+        tool_configurations: {}
+        tool_description: This workflow accepts file (single or multiple), extensions
+          (in case of more than one, use comma separated string), preferred language
+          and file size. It will validated as per the input parameters and returns
+          file metadata.
+        tool_label: COM_File_Validator
+        tool_name: comFileValidator
+        tool_node_version: '2'
+        tool_parameters:
+          file_input:
+            type: variable
+            value:
+            - sys
+            - files
+          max_file_size:
+            type: constant
+            value: 10
+          preferred_language:
+            type: mixed
+            value: '{{#conversation.preferred_lang#}}'
+          required_extension:
+            type: mixed
+            value: '{{#conversation.file_extension#}}'
+        type: tool
+      height: 149
+      id: '1777452194414'
+      position:
+        x: 714.682302537459
+        y: 431.3745880206932
+      positionAbsolute:
+        x: 714.682302537459
+        y: 431.3745880206932
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "\ndef main():\n    return {\n        \"result\": 1,\n    }"
+        code_language: python3
+        desc: This node return 1 to update the variable file_upload
+        outputs:
+          result:
+            children: null
+            type: number
+        selected: false
+        title: return 1
+        type: code
+        variables: []
+      height: 97
+      id: '1777553831531'
+      position:
+        x: 1799.7288336027475
+        y: 364.475230318751
+      positionAbsolute:
+        x: 1799.7288336027475
+        y: 364.475230318751
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: This node assign 1 to file_uploaded variable to maintain global records
+          that file has been successfully received.
+        items:
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1777553831531'
+          - result
+          variable_selector:
+          - conversation
+          - progress_management_sheet
+          write_mode: over-write
+        selected: false
+        title: Assign 1 to file_uploaded
+        type: assigner
+        version: '2'
+      height: 145
+      id: '1777553925943'
+      position:
+        x: 1997.6996629053294
+        y: 431.3745880206932
+      positionAbsolute:
+        x: 1997.6996629053294
+        y: 431.3745880206932
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: xl_file
+            ja_JP: xl_file
+            pt_BR: xl_file
+            zh_Hans: xl_file
+          llm_description: ''
+          max: null
+          min: null
+          name: xl_file
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: files
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: sheet_name
+            ja_JP: sheet_name
+            pt_BR: sheet_name
+            zh_Hans: sheet_name
+          llm_description: ''
+          max: null
+          min: null
+          name: sheet_name
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: list_of_column
+            ja_JP: list_of_column
+            pt_BR: list_of_column
+            zh_Hans: list_of_column
+          llm_description: ''
+          max: null
+          min: null
+          name: list_of_column
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: number_of_rows
+            ja_JP: number_of_rows
+            pt_BR: number_of_rows
+            zh_Hans: number_of_rows
+          llm_description: ''
+          max: null
+          min: null
+          name: number_of_rows
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: lang
+            ja_JP: lang
+            pt_BR: lang
+            zh_Hans: lang
+          llm_description: ''
+          max: null
+          min: null
+          name: lang
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: max_file_size
+            ja_JP: max_file_size
+            pt_BR: max_file_size
+            zh_Hans: max_file_size
+          llm_description: ''
+          max: null
+          min: null
+          name: max_file_size
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: number
+        params:
+          lang: ''
+          list_of_column: ''
+          max_file_size: ''
+          number_of_rows: ''
+          sheet_name: ''
+          xl_file: ''
+        provider_id: 67779d92-961d-43b2-b1fb-f18bd2837994
+        provider_name: excel extractor V4 (WF)
+        provider_type: workflow
+        selected: false
+        title: excel extractor V4 (WF)
+        tool_configurations: {}
+        tool_description: extract required details from excel file.
+        tool_label: excel extractor V4 (WF)
+        tool_name: excel_extractor_v4
+        tool_node_version: '2'
+        tool_parameters:
+          lang:
+            type: mixed
+            value: '{{#1776057413585.preferred_lang#}}'
+          list_of_column:
+            type: mixed
+            value: '{{#conversation.client_column_pms#}}'
+          max_file_size:
+            type: variable
+            value:
+            - conversation
+            - max_file_sixe
+          number_of_rows:
+            type: variable
+            value:
+            - conversation
+            - number_of_rows
+          sheet_name:
+            type: mixed
+            value: '{{#conversation.sheet_name#}}'
+          xl_file:
+            type: variable
+            value:
+            - sys
+            - files
+        type: tool
+      height: 53
+      id: '1777977640192'
+      position:
+        x: 1431.634604862191
+        y: 535.3481680755294
+      positionAbsolute:
+        x: 1431.634604862191
+        y: 535.3481680755294
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1777977640192.text#}}
+
+          {{#1777977640192.files#}}'
+        desc: ''
+        selected: false
+        title: Answer 7
+        type: answer
+        variables: []
+      height: 121
+      id: '1777978208606'
+      position:
+        x: 1735.634604862191
+        y: 535.3481680755294
+      positionAbsolute:
+        x: 1735.634604862191
+        y: 535.3481680755294
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -520.3417866252303
+      y: -62.057998313335816
+      zoom: 0.9408261075137859
