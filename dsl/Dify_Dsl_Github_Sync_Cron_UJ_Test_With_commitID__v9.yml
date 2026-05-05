@@ -1,0 +1,888 @@
+app:
+  description: Standalone Python script that exports Dify DSL and commits it to GitHub.
+    Designed to run as a scheduled cron job — no web server, no HTTP endpoints. Uses
+    a static Bearer token for Dify Cloud authentication.
+  icon: 🕐
+  icon_background: '#E0F2FE'
+  mode: workflow
+  name: Dify Dsl Github Sync Cron UJ Test With commitID - v9
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.3.1
+workflow:
+  conversation_variables: []
+  environment_variables:
+  - description: ''
+    id: bfa3e977-6369-41cb-a4b0-52b6b94de7b6
+    name: DIFY_REFRESH_TOKEN
+    selector:
+    - env
+    - DIFY_REFRESH_TOKEN
+    value: ''
+    value_type: secret
+  - description: Static Bearer token from cloud.dify.ai DevTools > Application > Local
+      Storage > access_token
+    id: env-dify-access-token
+    name: DIFY_ACCESS_TOKEN
+    selector:
+    - env
+    - DIFY_ACCESS_TOKEN
+    value: ''
+    value_type: secret
+  - description: Dify Cloud host URL
+    id: env-dify-host
+    name: DIFY_HOST
+    selector:
+    - env
+    - DIFY_HOST
+    value: http://172.30.116.165
+    value_type: string
+  - description: GitHub Personal Access Token with repo scope
+    id: env-github-token
+    name: GITHUB_TOKEN
+    selector:
+    - env
+    - GITHUB_TOKEN
+    value: ''
+    value_type: secret
+  - description: GitHub repository owner or organisation
+    id: env-github-owner
+    name: GITHUB_OWNER
+    selector:
+    - env
+    - GITHUB_OWNER
+    value: urvashijawere-ops
+    value_type: string
+  - description: GitHub repository name
+    id: env-github-repo
+    name: GITHUB_REPO
+    selector:
+    - env
+    - GITHUB_REPO
+    value: dify-dsl-sync-1646
+    value_type: string
+  - description: Target branch for commits
+    id: env-github-branch
+    name: GITHUB_BRANCH
+    selector:
+    - env
+    - GITHUB_BRANCH
+    value: main
+    value_type: string
+  - description: Max apps to process per run. Keep <=40 to stay within iteration queue
+      limits.
+    id: env-batch-size
+    name: BATCH_SIZE
+    selector:
+    - env
+    - BATCH_SIZE
+    value: '40'
+    value_type: string
+  - description: Starting index for this run. Set 0,40,80,120... across multiple cron
+      schedules to cover all apps.
+    id: env-batch-offset
+    name: BATCH_OFFSET
+    selector:
+    - env
+    - BATCH_OFFSET
+    value: '0'
+    value_type: string
+  features:
+    file_upload:
+      allowed_file_extensions: []
+      allowed_file_types: []
+      allowed_file_upload_methods: []
+      enabled: false
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: code
+      id: e-start-cron
+      source: start
+      sourceHandle: source
+      target: cron_schedule
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-cron-bundle
+      source: cron_schedule
+      sourceHandle: source
+      target: bundle_source_files
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-bundle-compile
+      source: bundle_source_files
+      sourceHandle: source
+      target: compile_and_validate
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: iteration
+        targetType: end
+      id: 1777946437156-source-1777539540092-target
+      source: '1777946437156'
+      sourceHandle: source
+      target: '1777539540092'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-compile-apps
+      source: compile_and_validate
+      sourceHandle: source
+      target: get_apps
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: iteration
+      id: e-apps-iter
+      source: get_apps
+      sourceHandle: source
+      target: '1777946437156'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1777946437156'
+        sourceType: iteration-start
+        targetType: code
+      id: iter-start-sync
+      source: 1777946437156start
+      sourceHandle: source
+      target: iter_sync_one_app
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1777946437156'
+        sourceType: iteration-start
+        targetType: code
+      id: 1777946437156start0-source-iter_sync_one_app-target
+      source: 1777946437156start0
+      sourceHandle: source
+      target: iter_sync_one_app
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables: []
+      height: 54
+      id: start
+      position:
+        x: 80
+        y: 300
+      positionAbsolute:
+        x: 80
+        y: 300
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main():\n\tCRON_CONFIG = {\n\t\t\"schedules\": [\n\
+          \t\t\t{\"expression\": \"0 2 * * *\",  \"label\": \"nightly_02_utc\"},\n\
+          \t\t\t{\"expression\": \"0 14 * * *\", \"label\": \"afternoon_14_utc\"},\n\
+          \t\t],\n\t\t\"timezone\": \"UTC\",\n\t\t\"max_retries\": 3,\n\t\t\"retry_delay_seconds\"\
+          : 60,\n\t\t\"timeout_seconds\": 120,\n\t\t\"notify_on_failure\": True,\n\
+          \t\t\"skip_if_no_change\": True,\n\t}\n\tcron_config_json  = json.dumps(CRON_CONFIG,\
+          \ indent=2)\n\tschedule_count    = len(CRON_CONFIG[\"schedules\"])\n\tschedule_labels\
+          \   = \", \".join(s[\"label\"] for s in CRON_CONFIG[\"schedules\"])\n\t\
+          schedule_exprs    = \", \".join(s[\"expression\"] for s in CRON_CONFIG[\"\
+          schedules\"])\n\treturn {\n\t\t\"cron_config_json\": cron_config_json,\n\
+          \t\t\"schedule_count\": schedule_count,\n\t\t\"schedule_labels\": schedule_labels,\n\
+          \t\t\"schedule_exprs\": schedule_exprs\n\t}"
+        code_language: python3
+        desc: Defines the cron schedule configuration. Outputs a structured JSON config
+          block.
+        outputs:
+          cron_config_json:
+            children: null
+            type: string
+          schedule_count:
+            children: null
+            type: number
+          schedule_exprs:
+            children: null
+            type: string
+          schedule_labels:
+            children: null
+            type: string
+        selected: false
+        title: cron_schedule
+        type: code
+        variables: []
+      height: 146
+      id: cron_schedule
+      position:
+        x: 380
+        y: 300
+      positionAbsolute:
+        x: 380
+        y: 300
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(DIFY_HOST: str, GITHUB_OWNER: str, GITHUB_REPO:\
+          \ str, GITHUB_BRANCH: str):\n    # Env vars injected from Dify so os.getenv\
+          \ defaults in config.py\n    # match whatever is set in the Dify environment\
+          \ variables panel.\n\n    config_py = (\n        'import os\\n'\n      \
+          \  'from dotenv import load_dotenv\\n'\n        '\\n'\n        'load_dotenv()\\\
+          n'\n        '\\n'\n        '\\n'\n        'class Config:\\n'\n        f\"\
+          \    DIFY_HOST: str          = os.getenv('DIFY_HOST',          '{DIFY_HOST}')\\\
+          n\"\n        f\"    DIFY_ACCESS_TOKEN: str  = os.getenv('DIFY_ACCESS_TOKEN',\
+          \  '')\\n\"\n        f\"    DIFY_APP_ID: str        = os.getenv('DIFY_APP_ID',\
+          \        '')\\n\"\n        f\"    DIFY_APP_NAME: str      = os.getenv('DIFY_APP_NAME',\
+          \      'app')\\n\"\n        f\"    GITHUB_TOKEN: str       = os.getenv('GITHUB_TOKEN',\
+          \       '')\\n\"\n        f\"    GITHUB_OWNER: str       = os.getenv('GITHUB_OWNER',\
+          \       '{GITHUB_OWNER}')\\n\"\n        f\"    GITHUB_REPO: str        =\
+          \ os.getenv('GITHUB_REPO',        '{GITHUB_REPO}')\\n\"\n        f\"   \
+          \ GITHUB_BRANCH: str      = os.getenv('GITHUB_BRANCH',      '{GITHUB_BRANCH}')\\\
+          n\"\n        f\"    GITHUB_FILE_PATH: str   = os.getenv('GITHUB_FILE_PATH',\
+          \   'dsl/app.yml')\\n\"\n        '\\n'\n        '    def validate(self)\
+          \ -> None:\\n'\n        \"        required = ['DIFY_HOST', 'DIFY_ACCESS_TOKEN',\
+          \ 'DIFY_APP_ID',\\n\"\n        \"                    'GITHUB_TOKEN', 'GITHUB_OWNER',\
+          \ 'GITHUB_REPO']\\n\"\n        '        missing = [k for k in required if\
+          \ not getattr(self, k)]\\n'\n        \"        if missing:\\n\"\n      \
+          \  \"            raise ValueError(f'Missing required env vars: {missing}')\\\
+          n\"\n        '\\n'\n        '\\n'\n        'config = Config()\\n'\n    \
+          \    'config.validate()\\n'\n    )\n\n    dify_client_py = (\n        'import\
+          \ httpx\\n'\n        'from config import config\\n'\n        '\\n'\n   \
+          \     '\\n'\n        'class TokenExpiredError(Exception):\\n'\n        '\
+          \    pass\\n'\n        '\\n'\n        '\\n'\n        'class DifyClient:\\\
+          n'\n        '\\n'\n        '    def _get_headers(self) -> dict:\\n'\n  \
+          \      '        if not config.DIFY_ACCESS_TOKEN:\\n'\n        \"       \
+          \     raise ValueError('DIFY_ACCESS_TOKEN is not set.')\\n\"\n        '\
+          \        return {\\n'\n        \"            'Authorization': f'Bearer {config.DIFY_ACCESS_TOKEN}',\\\
+          n\"\n        \"            'Content-Type': 'application/json',\\n\"\n  \
+          \      '        }\\n'\n        '\\n'\n        '    async def export_dsl(self,\
+          \ app_id: str, include_secret: bool = False) -> str:\\n'\n        \"   \
+          \     url = f'{config.DIFY_HOST}/console/api/apps/{app_id}/export'\\n\"\n\
+          \        \"        params = {'include_secret': str(include_secret).lower()}\\\
+          n\"\n        '        async with httpx.AsyncClient(timeout=30) as client:\\\
+          n'\n        '            response = await client.get(url, headers=self._get_headers(),\
+          \ params=params)\\n'\n        '        if response.status_code == 401:\\\
+          n'\n        \"            raise TokenExpiredError('TOKEN_EXPIRED: update\
+          \ DIFY_ACCESS_TOKEN in .env')\\n\"\n        '        response.raise_for_status()\\\
+          n'\n        \"        content_type = response.headers.get('content-type',\
+          \ '')\\n\"\n        \"        return response.json().get('data', response.text)\
+          \ if 'json' in content_type else response.text\\n\"\n        '\\n'\n   \
+          \     '\\n'\n        'dify_client = DifyClient()\\n'\n    )\n\n    github_client_py\
+          \ = (\n        'import base64\\n'\n        'import httpx\\n'\n        'from\
+          \ typing import Optional, Tuple\\n'\n        'from config import config\\\
+          n'\n        '\\n'\n        '\\n'\n        'class GitHubClient:\\n'\n   \
+          \     '\\n'\n        '    def __init__(self) -> None:\\n'\n        \"  \
+          \      self.base_url = 'https://api.github.com'\\n\"\n        '        self.headers\
+          \ = {\\n'\n        \"            'Authorization': f'Bearer {config.GITHUB_TOKEN}',\\\
+          n\"\n        \"            'Accept': 'application/vnd.github+json',\\n\"\
+          \n        \"            'X-GitHub-Api-Version': '2022-11-28',\\n\"\n   \
+          \     '        }\\n'\n        '\\n'\n        '    def _file_url(self, file_path:\
+          \ str) -> str:\\n'\n        \"        return f'{self.base_url}/repos/{config.GITHUB_OWNER}/{config.GITHUB_REPO}/contents/{file_path}'\\\
+          n\"\n        '\\n'\n        '    async def get_file(self, file_path: str)\
+          \ -> Tuple[Optional[str], Optional[str]]:\\n'\n        '        async with\
+          \ httpx.AsyncClient(timeout=30) as client:\\n'\n        '            response\
+          \ = await client.get(\\n'\n        '                self._file_url(file_path),\\\
+          n'\n        '                headers=self.headers,\\n'\n        \"     \
+          \           params={'ref': config.GITHUB_BRANCH},\\n\"\n        '      \
+          \      )\\n'\n        '        if response.status_code == 404:\\n'\n   \
+          \     '            return None, None\\n'\n        '        response.raise_for_status()\\\
+          n'\n        '        data = response.json()\\n'\n        \"        decoded\
+          \ = base64.b64decode(data['content'].replace('\\\\n', '')).decode('utf-8')\\\
+          n\"\n        \"        return data['sha'], decoded\\n\"\n        '\\n'\n\
+          \        '    async def github_commit_push(\\n'\n        '        self,\\\
+          n'\n        '        file_path: str,\\n'\n        '        content: str,\\\
+          n'\n        '        commit_message: str,\\n'\n        '        sha: Optional[str]\
+          \ = None,\\n'\n        '    ) -> str:\\n'\n        '        payload = {\\\
+          n'\n        \"            'message': commit_message,\\n\"\n        \"  \
+          \          'content': base64.b64encode(content.encode('utf-8')).decode('utf-8'),\\\
+          n\"\n        \"            'branch': config.GITHUB_BRANCH,\\n\"\n      \
+          \  '        }\\n'\n        '        if sha:\\n'\n        \"            payload['sha']\
+          \ = sha\\n\"\n        '        async with httpx.AsyncClient(timeout=30)\
+          \ as client:\\n'\n        '            response = await client.put(\\n'\n\
+          \        '                self._file_url(file_path),\\n'\n        '    \
+          \            headers=self.headers,\\n'\n        '                json=payload,\\\
+          n'\n        '            )\\n'\n        '            response.raise_for_status()\\\
+          n'\n        \"        return response.json()['commit']['html_url']\\n\"\n\
+          \        '\\n'\n        '\\n'\n        'github_client = GitHubClient()\\\
+          n'\n    )\n\n    sync_service_py = (\n        'import difflib\\n'\n    \
+          \    'from datetime import datetime, timezone\\n'\n        'from dataclasses\
+          \ import dataclass\\n'\n        'from typing import Optional\\n'\n     \
+          \   'from dify_client import dify_client, TokenExpiredError\\n'\n      \
+          \  'from github_client import github_client\\n'\n        'from config import\
+          \ config\\n'\n        '\\n'\n        '\\n'\n        '@dataclass\\n'\n  \
+          \      'class SyncResult:\\n'\n        '    status: str\\n'\n        ' \
+          \   committed: bool\\n'\n        '    message: str\\n'\n        '    commit_url:\
+          \ Optional[str]    = None\\n'\n        '    lines_changed: int         \
+          \  = 0\\n'\n        '    token_refresh_required: bool = False\\n'\n    \
+          \    '\\n'\n        '\\n'\n        'class SyncService:\\n'\n        '\\\
+          n'\n        '    def _commit_message(self, app_name: str, diff_lines: list,\
+          \ custom: str = None) -> str:\\n'\n        '        if custom:\\n'\n   \
+          \     '            return custom\\n'\n        \"        added   = sum(1\
+          \ for l in diff_lines if l.startswith('+') and not l.startswith('+++'))\\\
+          n\"\n        \"        removed = sum(1 for l in diff_lines if l.startswith('-')\
+          \ and not l.startswith('---'))\\n\"\n        \"        ts = datetime.now(timezone.utc).strftime('%Y-%m-%d\
+          \ %H:%M UTC')\\n\"\n        \"        return f'chore: sync Dify DSL [{app_name}]\
+          \ +{added}/-{removed} ({ts})'\\n\"\n        '\\n'\n        '    def _diff(self,\
+          \ current: str, new: str) -> tuple:\\n'\n        '        a = current.strip().splitlines()\\\
+          n'\n        '        b = new.strip().splitlines()\\n'\n        \"      \
+          \  lines = list(difflib.unified_diff(a, b, fromfile='current', tofile='new',\
+          \ lineterm=''))\\n\"\n        \"        changed = sum(1 for l in lines if\
+          \ l.startswith(('+', '-')) and not l.startswith(('+++', '---')))\\n\"\n\
+          \        '        return bool(lines), lines, changed\\n'\n        '\\n'\n\
+          \        '    async def run(self, app_id: str = None, file_path: str = None,\\\
+          n'\n        '                  commit_message: str = None, include_secret:\
+          \ bool = False) -> SyncResult:\\n'\n        '        app_id    = app_id\
+          \    or config.DIFY_APP_ID\\n'\n        '        file_path = file_path or\
+          \ config.GITHUB_FILE_PATH\\n'\n        '        try:\\n'\n        '    \
+          \        new_dsl = await dify_client.export_dsl(app_id, include_secret)\\\
+          n'\n        '        except TokenExpiredError as exc:\\n'\n        \"  \
+          \          return SyncResult(status='token_expired', committed=False, message=str(exc),\
+          \ token_refresh_required=True)\\n\"\n        '        except Exception as\
+          \ exc:\\n'\n        \"            return SyncResult(status='error', committed=False,\
+          \ message=f'DSL export failed: {exc}')\\n\"\n        '        try:\\n'\n\
+          \        '            sha, current_dsl = await github_client.get_file(file_path)\\\
+          n'\n        '        except Exception as exc:\\n'\n        \"          \
+          \  return SyncResult(status='error', committed=False, message=f'GitHub read\
+          \ failed: {exc}')\\n\"\n        '        if current_dsl is not None:\\n'\n\
+          \        '            changed, diff_lines, n_changed = self._diff(current_dsl,\
+          \ new_dsl)\\n'\n        '            if not changed:\\n'\n        \"   \
+          \             return SyncResult(status='no_change', committed=False, message='DSL\
+          \ unchanged - no commit required.', lines_changed=0)\\n\"\n        '   \
+          \     else:\\n'\n        \"            diff_lines, n_changed = [], new_dsl.count('\\\
+          \\n') + 1\\n\"\n        '        msg = self._commit_message(config.DIFY_APP_NAME,\
+          \ diff_lines, commit_message)\\n'\n        '        try:\\n'\n        '\
+          \            url = await github_client.github_commit_push(file_path, new_dsl,\
+          \ msg, sha)\\n'\n        '        except Exception as exc:\\n'\n       \
+          \ \"            return SyncResult(status='error', committed=False, message=f'GitHub\
+          \ commit failed: {exc}')\\n\"\n        \"        return SyncResult(status='committed',\
+          \ committed=True, message=msg, commit_url=url, lines_changed=n_changed)\\\
+          n\"\n        '\\n'\n        '\\n'\n        'sync_service = SyncService()\\\
+          n'\n    )\n\n    sync_py = (\n        'import asyncio\\n'\n        'import\
+          \ logging\\n'\n        'import sys\\n'\n        'from datetime import datetime,\
+          \ timezone\\n'\n        'from sync_service import sync_service\\n'\n   \
+          \     '\\n'\n        'logging.basicConfig(\\n'\n        '    level=logging.INFO,\\\
+          n'\n        \"    format='%(asctime)s  %(levelname)-8s  %(message)s',\\\
+          n\"\n        \"    datefmt='%Y-%m-%d %H:%M:%S',\\n\"\n        '    handlers=[logging.StreamHandler(sys.stdout)],\\\
+          n'\n        ')\\n'\n        'log = logging.getLogger(__name__)\\n'\n   \
+          \     '\\n'\n        '\\n'\n        'async def main() -> int:\\n'\n    \
+          \    '    started_at = datetime.now(timezone.utc).isoformat()\\n'\n    \
+          \    \"    log.info('Dify DSL sync started - %s', started_at)\\n\"\n   \
+          \     '    result = await sync_service.run()\\n'\n        \"    log.info('Status\
+          \        : %s', result.status)\\n\"\n        \"    log.info('Committed \
+          \    : %s', result.committed)\\n\"\n        \"    log.info('Message    \
+          \   : %s', result.message)\\n\"\n        '    if result.committed:\\n'\n\
+          \        \"        log.info('Commit URL    : %s', result.commit_url)\\n\"\
+          \n        \"        log.info('Lines changed : %d', result.lines_changed)\\\
+          n\"\n        \"    if result.status == 'token_expired':\\n\"\n        '\
+          \        log.error(\\n'\n        \"            'ACTION REQUIRED: DIFY_ACCESS_TOKEN\
+          \ has expired.\\\\n'\\n\"\n        \"            '  1. Go to https://cloud.dify.ai\
+          \ and log in.\\\\n'\\n\"\n        \"            '  2. Open DevTools > Application\
+          \ > Local Storage > access_token.\\\\n'\\n\"\n        \"            '  3.\
+          \ Copy value and update DIFY_ACCESS_TOKEN in your .env file.\\\\n'\\n\"\n\
+          \        \"            '  4. Re-run this script to verify.'\\n\"\n     \
+          \   '        )\\n'\n        '        return 1\\n'\n        \"    if result.status\
+          \ == 'error':\\n\"\n        \"        log.error('Sync failed: %s', result.message)\\\
+          n\"\n        '        return 1\\n'\n        \"    log.info('Sync complete.')\\\
+          n\"\n        '    return 0\\n'\n        '\\n'\n        '\\n'\n        \"\
+          if __name__ == '__main__':\\n\"\n        '    sys.exit(asyncio.run(main()))\\\
+          n'\n    )\n\n    bundle = {\n        'config.py':        config_py.strip(),\n\
+          \        'dify_client.py':   dify_client_py.strip(),\n        'github_client.py':\
+          \ github_client_py.strip(),\n        'sync_service.py':  sync_service_py.strip(),\n\
+          \        'sync.py':          sync_py.strip(),\n    }\n\n    return {\n \
+          \       'files_bundle': json.dumps(bundle, ensure_ascii=False),\n      \
+          \  'file_count':   len(bundle),\n        'file_names':   ', '.join(bundle.keys()),\n\
+          \    }\n"
+        code_language: python3
+        desc: Replaces 5 LLM nodes + assemble_source_files. Receives DIFY_HOST, GITHUB_OWNER,
+          GITHUB_REPO, GITHUB_BRANCH from Dify env and bakes them as os.getenv defaults
+          in the generated config.py. Zero LLM calls, zero 503 risk.
+        outputs:
+          file_count:
+            children: null
+            type: number
+          file_names:
+            children: null
+            type: string
+          files_bundle:
+            children: null
+            type: string
+        selected: false
+        title: bundle_source_files
+        type: code
+        variables:
+        - value_selector:
+          - env
+          - DIFY_HOST
+          value_type: string
+          variable: DIFY_HOST
+        - value_selector:
+          - env
+          - GITHUB_OWNER
+          value_type: string
+          variable: GITHUB_OWNER
+        - value_selector:
+          - env
+          - GITHUB_REPO
+          value_type: string
+          variable: GITHUB_REPO
+        - value_selector:
+          - env
+          - GITHUB_BRANCH
+          value_type: string
+          variable: GITHUB_BRANCH
+      height: 162
+      id: bundle_source_files
+      position:
+        x: 680
+        y: 300
+      positionAbsolute:
+        x: 680
+        y: 300
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import ast\nimport json\nimport time\n\ndef main(FILES_BUNDLE: str):\n\
+          \tbundle = json.loads(FILES_BUNDLE)\n\tWARN_BARE_EXCEPT = \"bare 'except:'\
+          \ use 'except Exception:'\"\n\tWARN_PRINT_STMT  = 'print() found remove\
+          \ before production'\n\tWARN_TODO        = 'TODO/FIXME resolve before deploying'\n\
+          \tresults = {}\n\ttotal_err = 0\n\ttotal_wrn = 0\n\tfor filename, source\
+          \ in bundle.items():\n\t\tentry = {'status': 'PASS', 'errors': [], 'warnings':\
+          \ [], 'lines': 0, 'parse_ms': 0.0}\n\t\tif not source or not source.strip():\n\
+          \t\t\tentry['errors'].append('Empty source')\n\t\t\tentry['status'] = 'FAIL'\n\
+          \t\t\ttotal_err += 1\n\t\t\tresults[filename] = entry\n\t\t\tcontinue\n\t\
+          \tentry['lines'] = source.count('\\n') + 1\n\t\tt0 = time.perf_counter()\n\
+          \t\ttry:\n\t\t\ttree = ast.parse(source, filename=filename)\n\t\t\tentry['parse_ms']\
+          \ = round((time.perf_counter() - t0) * 1000, 2)\n\t\texcept SyntaxError\
+          \ as exc:\n\t\t\tentry['parse_ms'] = round((time.perf_counter() - t0) *\
+          \ 1000, 2)\n\t\t\tentry['errors'].append(f'SyntaxError line {exc.lineno}:\
+          \ {exc.msg}')\n\t\t\tentry['status'] = 'FAIL'\n\t\t\ttotal_err += 1\n\t\t\
+          \tresults[filename] = entry\n\t\t\tcontinue\n\t\tfor node in ast.walk(tree):\n\
+          \t\t\tif isinstance(node, ast.ExceptHandler) and node.type is None:\n\t\t\
+          \t\tentry['warnings'].append(f'line {node.lineno}: {WARN_BARE_EXCEPT}')\n\
+          \t\t\tif (isinstance(node, ast.Call) and isinstance(getattr(node, 'func',\
+          \ None), ast.Name) and node.func.id == 'print'):\n\t\t\t\tentry['warnings'].append(f'line\
+          \ {node.lineno}: {WARN_PRINT_STMT}')\n\t\tfor i, line in enumerate(source.splitlines(),\
+          \ 1):\n\t\t\ts = line.lstrip()\n\t\t\tif s.startswith('#') and any(kw in\
+          \ s.upper() for kw in ('TODO', 'FIXME')):\n\t\t\t\tentry['warnings'].append(f'line\
+          \ {i}: {WARN_TODO}')\n\t\ttotal_wrn += len(entry['warnings'])\n\t\tif entry['warnings']\
+          \ and entry['status'] == 'PASS':\n\t\t\tentry['status'] = 'WARN'\n\t\tresults[filename]\
+          \ = entry\n\toverall  = 'PASS' if total_err == 0 else 'FAIL'\n\tpass_cnt\
+          \ = sum(1 for r in results.values() if r['status'] != 'FAIL')\n\trows =\
+          \ ['=== CODE COMPILATION REPORT ===', f'Overall: {overall}', f'Files: {pass_cnt}/{len(results)}\
+          \ passed', f'Errors: {total_err}', f'Warnings: {total_wrn}', '']\n\tfor\
+          \ fname, r in results.items():\n\t\ticon = 'OK' if r['status'] == 'PASS'\
+          \ else ('WARN' if r['status'] == 'WARN' else 'FAIL')\n\t\trows.append(f'\
+          \  [{icon}] {fname} - {r[\"lines\"]} lines, parse {r[\"parse_ms\"]}ms')\n\
+          \t\tfor e in r['errors']:\n\t\t\trows.append(f'    ERROR: {e}')\n\t\tfor\
+          \ w in r['warnings']:\n\t\t\trows.append(f'    WARNING: {w}')\n\treturn\
+          \ {\n\t\t'compile_report': '\\n'.join(rows),\n\t\t'has_errors': str(total_err\
+          \ > 0),\n\t\t'has_warnings': str(total_wrn > 0),\n\t\t'overall_status':\
+          \ overall\n\t}"
+        code_language: python3
+        desc: AST-parses all 5 bundled Python files. Catches syntax errors and quality
+          warnings. Now reads from bundle_source_files instead of assemble_source_files.
+        outputs:
+          compile_report:
+            children: null
+            type: string
+          has_errors:
+            children: null
+            type: string
+          has_warnings:
+            children: null
+            type: string
+          overall_status:
+            children: null
+            type: string
+        selected: false
+        title: compile_and_validate
+        type: code
+        variables:
+        - value_selector:
+          - bundle_source_files
+          - files_bundle
+          variable: FILES_BUNDLE
+      height: 130
+      id: compile_and_validate
+      position:
+        x: 980
+        y: 300
+      positionAbsolute:
+        x: 980
+        y: 300
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        error_handle_mode: continue-on-error
+        height: 314
+        is_parallel: false
+        iterator_input_type: array[object]
+        iterator_selector:
+        - get_apps
+        - apps_batch
+        output_selector:
+        - iter_sync_one_app
+        - result
+        output_type: array[object]
+        parallel_nums: 1
+        selected: false
+        start_node_id: 1777946437156start0
+        title: Iteration
+        type: iteration
+        width: 359
+      height: 314
+      id: '1777946437156'
+      position:
+        x: 1580
+        y: 300
+      positionAbsolute:
+        x: 1580
+        y: 300
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 359
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 1777946437156start
+      parentId: '1777946437156'
+      position:
+        x: 24
+        y: 68
+      positionAbsolute:
+        x: 1604
+        y: 368
+      selectable: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1777946437156'
+          - output
+          value_type: array[string]
+          variable: Result
+        selected: false
+        title: End
+        type: end
+      height: 90
+      id: '1777539540092'
+      position:
+        x: 2000
+        y: 300
+      positionAbsolute:
+        x: 2000
+        y: 300
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import httpx\n\ndef main(DIFY_ACCESS_TOKEN: str, DIFY_HOST: str, BATCH_SIZE:\
+          \ str, BATCH_OFFSET: str):\n    PAGE_SIZE   = 30\n    MAX_PAGES   = 50\n\
+          \    batch_size  = int(BATCH_SIZE)   if str(BATCH_SIZE).isdigit()  else\
+          \ 40\n    batch_offset= int(BATCH_OFFSET) if str(BATCH_OFFSET).isdigit()\
+          \ else 0\n    host        = DIFY_HOST.rstrip('/')\n    headers     = {'Authorization':\
+          \ f'Bearer {DIFY_ACCESS_TOKEN}'}\n    all_apps    = []\n    page       \
+          \ = 1\n\n    try:\n        with httpx.Client(timeout=10.0) as client:\n\
+          \            while page <= MAX_PAGES:\n                url  = f'{host}/console/api/apps?page={page}&limit={PAGE_SIZE}'\n\
+          \                resp = client.get(url, headers=headers)\n             \
+          \   resp.raise_for_status()\n                body  = resp.json()\n     \
+          \           batch = body.get('data', [])\n                # Collect only\
+          \ id + name — minimal payload\n                all_apps.extend({'id': a['id'],\
+          \ 'name': a['name']} for a in batch)\n                if not body.get('has_more',\
+          \ False) or not batch:\n                    break\n                page\
+          \ += 1\n\n        # Slice to current batch window\n        batch_apps =\
+          \ all_apps[batch_offset : batch_offset + batch_size]\n\n        return {\n\
+          \            'apps_batch':    batch_apps,\n            'batch_count':  \
+          \ len(batch_apps),\n            'total_apps':    len(all_apps),\n      \
+          \      'batch_offset':  batch_offset,\n            'batch_size':    batch_size,\n\
+          \            'status':        'OK' if batch_apps else 'Empty batch — offset\
+          \ may exceed total apps'\n        }\n\n    except Exception as e:\n    \
+          \    detail = f' | {e.response.text}' if hasattr(e, 'response') else ''\n\
+          \        return {\n            'apps_batch':   [],\n            'batch_count':\
+          \  0,\n            'total_apps':   0,\n            'batch_offset': batch_offset,\n\
+          \            'batch_size':   batch_size,\n            'status':       f'Error:\
+          \ {str(e)}{detail}'\n        }\n"
+        code_language: python3
+        desc: 'Paginates Dify API (page_size=30) to collect all app IDs+names. Slices
+          result to [BATCH_OFFSET : BATCH_OFFSET+BATCH_SIZE]. Outputs apps_batch —
+          always <=BATCH_SIZE items. Keeps iteration array small regardless of total
+          workspace size.'
+        outputs:
+          apps_batch:
+            children: null
+            type: array[object]
+          batch_count:
+            children: null
+            type: number
+          batch_offset:
+            children: null
+            type: number
+          batch_size:
+            children: null
+            type: number
+          status:
+            children: null
+            type: string
+          total_apps:
+            children: null
+            type: number
+        selected: false
+        title: GET_APPS
+        type: code
+        variables:
+        - value_selector:
+          - env
+          - DIFY_ACCESS_TOKEN
+          value_type: secret
+          variable: DIFY_ACCESS_TOKEN
+        - value_selector:
+          - env
+          - DIFY_HOST
+          value_type: string
+          variable: DIFY_HOST
+        - value_selector:
+          - env
+          - BATCH_SIZE
+          value_type: string
+          variable: BATCH_SIZE
+        - value_selector:
+          - env
+          - BATCH_OFFSET
+          value_type: string
+          variable: BATCH_OFFSET
+      height: 178
+      id: get_apps
+      position:
+        x: 1280
+        y: 300
+      positionAbsolute:
+        x: 1280
+        y: 300
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import httpx\nimport base64\n\ndef main(\n    DIFY_ACCESS_TOKEN: str,\
+          \ DIFY_HOST: str,\n    GITHUB_TOKEN: str, GITHUB_REPO: str,\n    GITHUB_OWNER:\
+          \ str, GITHUB_BRANCH: str,\n    app: dict\n):\n    app_id   = app.get('id',\
+          \ '')\n    app_name = app.get('name', 'unknown')\n    host     = DIFY_HOST.rstrip('/')\n\
+          \n    dify_headers   = {'Authorization': f'Bearer {DIFY_ACCESS_TOKEN}'}\n\
+          \    github_headers = {\n        'Authorization':        f'Bearer {GITHUB_TOKEN}',\n\
+          \        'Accept':               'application/vnd.github+json',\n      \
+          \  'X-GitHub-Api-Version': '2022-11-28'\n    }\n    clean  = ''.join(c for\
+          \ c in app_name if c.isalnum() or c in (' ','_')).strip().replace(' ','_')\n\
+          \    gh_url = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/dsl/{clean}.yml'\n\
+          \n    # Timeout strategy:\n    # Dify is on LAN — DSL YAMLs are small. Realistic:\
+          \ <2s. Cap: 7s.\n    # GitHub API — small payload. Realistic: <1s. Cap:\
+          \ 7s.\n    # Dify(7s) + GitHub_GET(7s) + GitHub_PUT(7s) = 21s absolute worst\
+          \ case.\n    # Actual p99: ~3-5s total. Sandbox limit 15s gives large real\
+          \ headroom.\n    # If Dify or GitHub consistently hit 7s, the issue is network\
+          \ not sandbox.\n    T = 7.0\n\n    # ── Step 1: Export DSL from Dify ─────────────────────────────────────\n\
+          \    try:\n        with httpx.Client(timeout=T) as client:\n           \
+          \ dr = client.get(f'{host}/console/api/apps/{app_id}/export', headers=dify_headers)\n\
+          \            if dr.status_code == 401:\n                return {'result':\
+          \ {'app': app_name, 'status': 'Error', 'commit_id': 'TOKEN_EXPIRED'}}\n\
+          \            dr.raise_for_status()\n            ct  = dr.headers.get('content-type',\
+          \ '')\n            dsl = dr.json().get('data', '') if 'json' in ct else\
+          \ dr.text\n    except httpx.TimeoutException:\n        return {'result':\
+          \ {'app': app_name, 'status': 'Error', 'commit_id': 'Dify export timeout\
+          \ (7s)'}}\n    except Exception as e:\n        return {'result': {'app':\
+          \ app_name, 'status': 'Error', 'commit_id': f'Dify error: {str(e)[:60]}'}}\n\
+          \n    # ── Step 2: GitHub GET — check existing SHA ───────────────────────────\n\
+          \    try:\n        with httpx.Client(timeout=T) as client:\n           \
+          \ sha      = None\n            get_resp = client.get(gh_url, headers=github_headers)\n\
+          \            if get_resp.status_code == 200:\n                data    =\
+          \ get_resp.json()\n                sha     = data.get('sha')\n         \
+          \       raw_b64 = data.get('content', '').replace('\\n', '')\n         \
+          \       remote  = base64.b64decode(raw_b64).decode('utf-8')\n          \
+          \      if remote.strip() == dsl.strip():\n                    return {'result':\
+          \ {'app': app_name, 'status': 'Skipped', 'commit_id': 'N/A'}}\n        \
+          \    elif get_resp.status_code not in (200, 404):\n                return\
+          \ {'result': {'app': app_name, 'status': 'Error', 'commit_id': f'GitHub\
+          \ GET {get_resp.status_code}'}}\n    except httpx.TimeoutException:\n  \
+          \      return {'result': {'app': app_name, 'status': 'Error', 'commit_id':\
+          \ 'GitHub GET timeout (7s)'}}\n    except Exception as e:\n        return\
+          \ {'result': {'app': app_name, 'status': 'Error', 'commit_id': f'GitHub\
+          \ GET error: {str(e)[:60]}'}}\n\n    # ── Step 3: GitHub PUT — push DSL\
+          \ ────────────────────────────────────\n    try:\n        with httpx.Client(timeout=T)\
+          \ as client:\n            payload = {\n                'message': f'sync:\
+          \ {app_name}',\n                'content': base64.b64encode(dsl.encode('utf-8')).decode('utf-8'),\n\
+          \                'branch':  GITHUB_BRANCH\n            }\n            if\
+          \ sha:\n                payload['sha'] = sha\n            put_resp = client.put(gh_url,\
+          \ headers=github_headers, json=payload)\n            put_resp.raise_for_status()\n\
+          \            commit_sha = put_resp.json().get('commit', {}).get('sha', 'unknown')[:7]\n\
+          \            return {'result': {'app': app_name, 'status': 'Success', 'commit_id':\
+          \ commit_sha}}\n    except httpx.TimeoutException:\n        return {'result':\
+          \ {'app': app_name, 'status': 'Error', 'commit_id': 'GitHub PUT timeout\
+          \ (7s)'}}\n    except Exception as e:\n        return {'result': {'app':\
+          \ app_name, 'status': 'Error', 'commit_id': f'GitHub PUT error: {str(e)[:60]}'}}\n"
+        code_language: python3
+        desc: 'Processes exactly ONE app per invocation (serial iteration). Three
+          separate httpx clients: Dify export (7s), GitHub GET (7s), GitHub PUT (7s).
+          Each client is independent — a skip on diff check exits before GitHub PUT.
+          Realistic p99 total: 3-5s. Sandbox limit 15s. is_parallel=False on iteration
+          = 1 thread always = zero thread ceiling pressure.'
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1777946437156'
+        outputs:
+          result:
+            children: null
+            type: object
+        selected: false
+        title: SYNC_ONE_APP
+        type: code
+        variables:
+        - value_selector:
+          - env
+          - DIFY_ACCESS_TOKEN
+          value_type: secret
+          variable: DIFY_ACCESS_TOKEN
+        - value_selector:
+          - env
+          - DIFY_HOST
+          value_type: string
+          variable: DIFY_HOST
+        - value_selector:
+          - env
+          - GITHUB_TOKEN
+          value_type: secret
+          variable: GITHUB_TOKEN
+        - value_selector:
+          - env
+          - GITHUB_REPO
+          value_type: string
+          variable: GITHUB_REPO
+        - value_selector:
+          - env
+          - GITHUB_OWNER
+          value_type: string
+          variable: GITHUB_OWNER
+        - value_selector:
+          - env
+          - GITHUB_BRANCH
+          value_type: string
+          variable: GITHUB_BRANCH
+        - value_selector:
+          - '1777946437156'
+          - item
+          value_type: object
+          variable: app
+      height: 226
+      id: iter_sync_one_app
+      parentId: '1777946437156'
+      position:
+        x: 94
+        y: 68
+      positionAbsolute:
+        x: 1674
+        y: 368
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 1777946437156start0
+      parentId: '1777946437156'
+      position:
+        x: 24
+        y: 68
+      positionAbsolute:
+        x: 1604
+        y: 368
+      selectable: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    viewport:
+      x: -311.2873176062633
+      y: 95.7447336262623
+      zoom: 0.5080471874175163
