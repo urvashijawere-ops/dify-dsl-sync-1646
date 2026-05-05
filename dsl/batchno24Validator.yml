@@ -2,14 +2,10 @@ app:
   description: ''
   icon: 🤖
   icon_background: '#FFEAD5'
-  mode: advanced-chat
-  name: batch-no-24-Validator
+  mode: workflow
+  name: batch-no24-Validator
   use_icon_as_answer_icon: false
-dependencies:
-- current_identifier: null
-  type: marketplace
-  value:
-    marketplace_plugin_unique_identifier: langgenius/gemini:0.7.4@5faf411e694e0da130a337347a625a3812b1b7502a0183382d66d92c841bf05a
+dependencies: []
 kind: app
 version: 0.3.1
 workflow:
@@ -61,106 +57,151 @@ workflow:
   graph:
     edges:
     - data:
+        isInIteration: false
+        isInLoop: false
         sourceType: start
-        targetType: llm
-      id: 1777971904647-llm
-      source: '1777971904647'
+        targetType: code
+      id: 1777971994189-source-1777973172859-target
+      source: '1777971994189'
       sourceHandle: source
-      target: llm
+      target: '1777973172859'
       targetHandle: target
       type: custom
+      zIndex: 0
     - data:
-        sourceType: llm
-        targetType: answer
-      id: llm-answer
-      source: llm
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: 1777973172859--1777973355931-target
+      source: '1777973172859'
       sourceHandle: source
-      target: answer
+      target: '1777973355931'
       targetHandle: target
       type: custom
+      zIndex: 0
     nodes:
     - data:
         desc: ''
         selected: false
         title: Start
         type: start
-        variables: []
+        variables:
+        - label: KB JSON String
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: kb_json
+        - label: Batch Rows (JSON String)
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: batch_rows
+      height: 115
+      id: '1777971994189'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(batch_rows: list, kb_json: str) -> dict:\n\
+          \    # Parse the knowledge base JSON\n    try:\n        kb = json.loads(kb_json)\n\
+          \    except:\n        return {\"deficiencies\": {\"deficiencies\": [\"Invalid\
+          \ KB JSON format\"]}}\n    \n    deficiency_list = []\n    \n    for row\
+          \ in batch_rows:\n        # Only check rows where Revision/Abolition Category\
+          \ indicates change or new addition\n        rev_cat = row.get(\"Revision/Abolition\
+          \ Category\", \"\")\n        if rev_cat not in [\"Daily Allowance Change\"\
+          , \"New Addition\"]:\n            continue\n        \n        # Get the\
+          \ allowance amount (skip if None or \"Actual expenses\")\n        amount\
+          \ = row.get(\"Allowance Amount\")\n        if amount is None or amount ==\
+          \ \"Actual expenses\":\n            continue\n        \n        cat1 = row.get(\"\
+          Category 1\", \"\")\n        cat2 = row.get(\"Category 2\", \"\")\n    \
+          \    holiday = row.get(\"Holiday Category\", \"\")\n        \n        expected\
+          \ = None\n        \n        # ----- Exact category matching from real Form\
+          \ 3 -----\n        if cat1 == \"Accommodation Expense\":\n            if\
+          \ \"Executive\" in cat2:\n                expected = kb[\"lodging\"][\"\
+          Executive\"]\n            else:\n                expected = kb[\"lodging\"\
+          ][\"Staff\"]\n        \n        elif cat1 == \"Includes Daily Allowance\
+          \ and nDay Trip (Business)\":\n            # Day trip: use Staff 100km+\
+          \ rate\n            expected = kb[\"day_trip_per_diem\"][\"Staff\"][\"100km_plus\"\
+          ]\n        \n        elif cat1 == \"Includes Daily Allowance and nBusiness\
+          \ Trip (with overnight)\":\n            expected = kb[\"overnight_per_diem\"\
+          ][\"Staff\"]\n        \n        # Add more elif for other categories if\
+          \ they appear in future Form 3 files\n        # Example:\n        # elif\
+          \ cat1 == \"Meal Allowance\":\n        #     if \"Breakfast\" in cat2:\n\
+          \        #         expected = kb[\"meal_allowance\"][\"Breakfast\"]\n  \
+          \      #     elif \"Dinner\" in cat2:\n        #         expected = kb[\"\
+          meal_allowance\"][\"Dinner\"]\n        \n        if expected is not None\
+          \ and amount != expected:\n            deficiency_list.append(\n       \
+          \         f\"{cat1} / {cat2} (Holiday:{holiday}) expected {expected}, found\
+          \ {amount}\"\n            )\n    \n    return {\"deficiencies\": {\"deficiencies\"\
+          : deficiency_list}}"
+        code_language: python3
+        desc: ''
+        outputs:
+          deficiencies:
+            children: null
+            type: object
+        selected: true
+        title: Code
+        type: code
+        variables:
+        - value_selector:
+          - '1777971994189'
+          - batch_rows
+          value_type: string
+          variable: batch_rows
+        - value_selector:
+          - '1777971994189'
+          - kb_json
+          value_type: string
+          variable: kb_json
       height: 53
-      id: '1777971904647'
+      id: '1777973172859'
       position:
-        x: 80
+        x: 384
         y: 282
       positionAbsolute:
-        x: 80
+        x: 384
         y: 282
+      selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
       width: 244
     - data:
-        context:
-          enabled: false
-          variable_selector: []
         desc: ''
-        memory:
-          query_prompt_template: '{{#sys.query#}}
-
-
-            {{#sys.files#}}'
-          role_prefix:
-            assistant: ''
-            user: ''
-          window:
-            enabled: false
-            size: 10
-        model:
-          completion_params:
-            temperature: 0.7
-          mode: chat
-          name: gemini-2.5-pro
-          provider: langgenius/gemini/google
-        prompt_template:
-        - id: f31b6f0c-20bf-4e99-b50e-27cfbe425b16
-          role: system
-          text: ''
+        outputs:
+        - value_selector:
+          - '1777973172859'
+          - deficiencies
+          value_type: object
+          variable: result
         selected: false
-        title: LLM
-        type: llm
-        variables: []
-        vision:
-          enabled: false
-      height: 89
-      id: llm
+        title: End
+        type: end
+      height: 90
+      id: '1777973355931'
       position:
-        x: 380
+        x: 688
         y: 282
       positionAbsolute:
-        x: 380
-        y: 282
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 244
-    - data:
-        answer: '{{#llm.text#}}'
-        desc: ''
-        selected: false
-        title: Answer
-        type: answer
-        variables: []
-      height: 103
-      id: answer
-      position:
-        x: 680
-        y: 282
-      positionAbsolute:
-        x: 680
+        x: 688
         y: 282
       sourcePosition: right
       targetPosition: left
       type: custom
       width: 244
     viewport:
-      x: 0
-      y: 0
-      zoom: 1
+      x: 64.96182970251033
+      y: 43.7015945271433
+      zoom: 0.8818875823590722
